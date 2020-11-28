@@ -84,7 +84,7 @@ public partial class MAIN {
             | ZERO    | +4       | +0      |
             | BLIST   | +2       | +0      |
             |------------------------------|
-            | TOTAL   | +63      | +0      |
+            | TOTAL   | +63      | +10     |
             \*----------------------------*/
 
             set_max_progress( 63 );
