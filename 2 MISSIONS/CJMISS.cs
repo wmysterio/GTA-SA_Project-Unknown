@@ -31,7 +31,7 @@ public partial class MAIN {
         Array<Marker> enemyMarkers = MAX_ARRAY_OF_ACTIVE_COUNT, friendMarkers = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Car> enemyCars = MAX_ARRAY_OF_ACTIVE_COUNT;
 
-        // 34 + 20 + 5*0 = 104 of 1023
+        // 34 + 20 + 5*10 = 104 of 1023
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
