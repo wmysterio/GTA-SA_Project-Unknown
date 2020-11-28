@@ -8,12 +8,12 @@ static class Extension {
 
     #region VEHICLE
     public static void do_if_wrecked<T>( this Vehicle<T> hVehicle, Action action ) where T : Vehicle<T> {
-        Script.or( hVehicle.is_wrecked(), hVehicle.is_in_water(), action );
+        or( hVehicle.is_wrecked(), hVehicle.is_in_water(), action );
     }
     public static void destroy_if_exist<T>( this Vehicle<T> hVehicle ) where T : Vehicle<T> {
-        Script.and( hVehicle.is_defined(), delegate {
+        and( hVehicle.is_defined(), delegate {
             hVehicle.remove_references();
-            Script.and( Script.PlayerActor.is_in_vehicle( hVehicle ), delegate {
+            and( Script.PlayerActor.is_in_vehicle( hVehicle ), delegate {
                 hVehicle.set_tires_vulnerable( false ).set_immunities( false );
             }, delegate { hVehicle.destroy(); } );
         } );
