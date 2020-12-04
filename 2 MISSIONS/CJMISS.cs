@@ -30,15 +30,16 @@ public partial class MAIN {
         Array<Actor> enemyActors = MAX_ARRAY_OF_ACTIVE_COUNT, friendActors = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Marker> enemyMarkers = MAX_ARRAY_OF_ACTIVE_COUNT, friendMarkers = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Car> enemyCars = MAX_ARRAY_OF_ACTIVE_COUNT;
+        Array<Object> targetObjects = MAX_ARRAY_OF_ACTIVE_COUNT;
 
-        // 34 + 20 + 5*10 = 104 of 1023
+        // 34 + 20 + 6*10 = 114 of 1023
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
             wait( 1000 );
-            destroy_all_trains();
             enable_train_traffic( false );
+            destroy_all_trains();
             failedMessage.value = sString.DUMMY;
             loaded_path.value = -1;
             play_passed_sound.value = true;
@@ -178,6 +179,9 @@ public partial class MAIN {
             wait( 1000 );
             fade( true, 500 );
             __disable_player_controll_in_cutscene( false );
+            CJ_START_X.value = 276.703;
+            CJ_START_Y.value = -1433.3204;
+            CJ_START_Z.value = 13.8713;
             wait( 500 );
             jump_passed();
         }
@@ -185,6 +189,124 @@ public partial class MAIN {
 
         #region MISSION 1
         private void MISSION_1( LabelCase l ) {
+
+
+
+
+
+
+
+            CJ_START_X.value = 2498.9802;
+            CJ_START_Y.value = -1685.6517;
+            CJ_START_Z.value = 13.4478;
+            fade( 1, 1500 );
+            //Int[] usedModels = { MICRO_UZI, TEC9, COLT45, FAM1, FAM2, FAM3, BALLAS1, BALLAS2, BALLAS3, MAJESTIC };
+
+            //plus_respect.value = 10;
+            //a.set_position( 2513.3271, -1670.5092, 13.5149 );
+            //chdir( @"Sound\CJMISS" );
+            //AUDIO_BG.load( 999998, true );
+            //wait( AUDIO_BG.is_ready );
+            //AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
+            //Gosub += SCENE_1A;
+            //load_special_actor( SpecialActor.CESAR, 1 );
+            //load_requested_models( usedModels );
+            //wait( is_special_actor_loaded( 1 ) );
+            //clear_area( 1, 2041.3564, -1672.2263, 13.3828, 300.0 );
+            //__renderer_at( 2041.2562, -1618.3821, 12.5469 );
+            //PlayerActor.put_at( 2041.2562, -1618.3821, 12.5469, 180.0 );
+            //__camera_default();
+
+            //enemyDecisionMaker.create_normal();
+
+            //helpWeapon.create_if_need( WeaponNumber.MICRO_UZI, WeaponModel.MICRO_UZI, 250, 2044.4025, -1624.189, 13.5469, temp );
+
+            //enemyCars[ 0 ].create( MAJESTIC, 2042.4576, -1706.4899, 13.1329 ).set_z_angle( 330.4716 );
+
+            //enemyActors[ 0 ].create( ActorType.MISSION1, BALLAS2, 2038.8091, -1697.7739, 12.5469 ).set_z_angle( 358.1433 );
+            //enemyActors[ 1 ].create( ActorType.MISSION1, BALLAS1, 2040.7072, -1704.4471, 12.5547 ).set_z_angle( 355.95 );
+            //enemyActors[ 2 ].create( ActorType.MISSION1, BALLAS2, 2039.3774, -1709.9406, 12.5469 ).set_z_angle( 353.0234 );
+            //enemyActors[ 3 ].create( ActorType.MISSION1, BALLAS3, 2032.6824, -1690.8292, 12.5469 ).set_z_angle( 342.6833 );
+            //enemyActors[ 4 ].create( ActorType.MISSION1, BALLAS1, 2049.7957, -1694.0028, 16.4531 ).set_z_angle( 26.8402 );
+            //enemyActors[ 5 ].create( ActorType.MISSION1, BALLAS2, 2049.4373, -1688.2037, 12.5547 ).set_z_angle( 16.4947 );
+
+            //friendActors[ 0 ].create( ActorType.MISSION2, FAM1, 2038.3684, -1657.6135, 12.5469 ).set_z_angle( 182.8817 );
+            //friendActors[ 1 ].create( ActorType.MISSION2, FAM2, 2042.4958, -1657.3539, 12.5469 ).set_z_angle( 179.7483 );
+            //friendActors[ 2 ].create( ActorType.MISSION2, FAM3, 2040.7076, -1652.5468, 12.5469 ).set_z_angle( 182.8817 );
+            //friendActors[ 3 ].create( ActorType.MISSION2, SPECIAL01, 2043.8499, -1628.0507, 12.5469 ).set_z_angle( 180.0616 );
+
+            //to( index, 0, 5, delegate {
+            //    enemyActors[ index ].set_acquaintance( AcquaintanceType.HATE, ActorType.MISSION2 )
+            //                        .set_acquaintance( AcquaintanceType.HATE, ActorType.PLAYER )
+            //                        .give_weapon( WeaponNumber.TEC9, 9999 )
+            //                        .set_armed_weapon( WeaponNumber.TEC9 )
+            //                        .set_decision_maker( enemyDecisionMaker )
+            //                        .set_drops_weapons_when_dead( false )
+            //                        .set_suffers_critical_hits( false )
+            //                        .set_max_health( 500 )
+            //                        .set_health( 500 )
+            //                        .set_weapon_accuracy( 30 )
+            //                        .set_weapon_attack_rate( 35 );
+            //    enemyMarkers[ index ].create_above_actor( enemyActors[ index ] ).set_size( 2 );
+            //} );
+            //to( index, 0, 3, delegate {
+            //    friendActors[ index ].set_acquaintance( AcquaintanceType.HATE, ActorType.MISSION1 )
+            //                         .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+            //                         .give_weapon( WeaponNumber.MICRO_UZI, 9999 )
+            //                         .set_armed_weapon( WeaponNumber.MICRO_UZI )
+            //                         .set_decision_maker( enemyDecisionMaker )
+            //                         .set_drops_weapons_when_dead( false )
+            //                         .set_suffers_critical_hits( false )
+            //                         .set_max_health( 150 )
+            //                         .set_health( 150 )
+            //                         .set_weapon_accuracy( 45 )
+            //                         .set_weapon_attack_rate( 35 )
+            //                         .set_untargetable( true );
+            //} );
+
+            //enemyActors[ 0 ].task.kill_actor_on_foot( friendActors[ 0 ] );
+            //enemyActors[ 1 ].set_weapon_skill( 2 ).task.kill_actor_on_foot( friendActors[ 1 ] );
+            //enemyActors[ 2 ].task.crouch( true ).kill_actor_on_foot( friendActors[ 2 ] );
+            //enemyActors[ 3 ].give_weapon( WeaponNumber.PISTOL, 9999 ).set_weapon_skill( 2 ).task.kill_actor_on_foot( friendActors[ 3 ] );
+            //enemyActors[ 4 ].set_weapon_accuracy( 85 ).set_weapon_attack_rate( 30 ).set_stay_in_same_place( true ).task.crouch( true ).kill_actor_on_foot( a );
+            //enemyActors[ 5 ].give_weapon( WeaponNumber.PISTOL, 9999 ).set_weapon_accuracy( 50 ).set_weapon_attack_rate( 35 ).task.kill_actor_on_foot( a );
+
+            //friendActors[ 0 ].task.crouch( true ).kill_actor_on_foot( enemyActors[ 0 ] );
+            //friendActors[ 1 ].task.kill_actor_on_foot( enemyActors[ 1 ] );
+            //friendActors[ 2 ].task.kill_actor_on_foot( enemyActors[ 2 ] );
+            //friendActors[ 3 ].set_weapon_accuracy( 65 )
+            //                 .set_max_health( 400 )
+            //                 .set_health( 400 )
+            //                 .set_only_damaged_by_player( true )
+            //                 .put_in_group( g )
+            //                 .set_never_leaves_group( true );
+
+            //friendMarkers[ 0 ].create_above_actor( friendActors[ 3 ] ).set_size( 2 ).set_type( true );
+
+            //destroy_model( usedModels );
+            //unload_special_actor( 1 );
+            //__set_entered_names( true );
+            //wait( 1000 );
+            //__set_player_ignore( false );
+            //set_sensitivity_to_crime( 0.3 );
+            //set_ped_traffic_density_multiplier( 1.0 );
+            //set_vehicle_traffic_density_multiplier( 0.2 );
+            //__disable_player_controll_in_cutscene( false );
+            //AUDIO_BG.set_volume( 1.0 );
+            //p.clear_wanted_level();
+            //__fade( true );
+            //show_text_highpriority( "@CJS@19", 6000, 1 );
+
+
+
+            jump_passed();
+        }
+        
+        
+        #endregion
+
+        #region MISSION 2
+        private void MISSION_2( LabelCase l ) {
 
             Int[] usedModels = { MICRO_UZI, TEC9, COLT45, FAM1, FAM2, FAM3, BALLAS1, BALLAS2, BALLAS3, MAJESTIC };
 
@@ -283,10 +405,10 @@ public partial class MAIN {
             p.clear_wanted_level();
             __fade( true );
             show_text_highpriority( "@CJS@19", 6000, 1 );
-            Jump += M1_LOOP;
+            Jump += M2_LOOP;
         }
 
-        private void M1_LOOP( LabelJump label ) {
+        private void M2_LOOP( LabelJump label ) {
             wait( 0 );
             and( !a.is_near_point_3d( 0, 2041.7961, -1672.145, 13.3828, 100.0, 100.0, 100.0 ), delegate {
                 ___jump_failed_message( "@CJS@21" );
@@ -305,7 +427,7 @@ public partial class MAIN {
                     temp += 1;
                 } );
             } );
-            and( temp == 6, delegate { Jump += M1_END; } );
+            and( temp == 6, delegate { Jump += M2_END; } );
             friendActors[ 0 ].do_if_dead( delegate {
                 and( !enemyActors[ 0 ].is_dead(), delegate {
                     enemyActors[ 0 ].get_task_status( 1506, temp );
@@ -324,10 +446,10 @@ public partial class MAIN {
                     and( temp == 7, delegate { enemyActors[ 2 ].task.kill_actor_on_foot( friendActors[ 3 ] ); } );
                 } );
             } );
-            jump( M1_LOOP );
+            jump( M2_LOOP );
         }
 
-        private void M1_END( LabelJump label ) {
+        private void M2_END( LabelJump label ) {
             __set_player_ignore( true );
             __set_traffic( 0.0 );
             __disable_player_controll_in_cutscene( true );
@@ -350,10 +472,7 @@ public partial class MAIN {
         }
         #endregion
 
-            
-        private void MISSION_2( LabelCase l ) {
-            jump_passed();
-        }
+
         private void MISSION_3( LabelCase l ) {
             jump_passed();
         }
@@ -473,7 +592,7 @@ public partial class MAIN {
             and( plus_temp == 1, delegate { show_text_1number_styled( sString.M_PASS, plus_reward, 5000, 1 ); p.add_money( plus_reward ); } );
             and( plus_temp == 0, delegate { show_text_styled( sString.M_PASSD, 5000, 1 ); } );
             and( play_passed_sound == true, delegate { play_music( MusicID.MISSION_PASSED ); } );
-            set_latest_mission_passed( CJ_CURRENT_MISSION_NAME );
+            set_latest_mission_passed( CURRENT_MISSION_NAME );
             CJ_TOTAL_MISSION_PASSED += 1;
             set_made_progress();
             and( CJ_TOTAL_MISSION_PASSED == 3, delegate {
@@ -516,9 +635,6 @@ public partial class MAIN {
             __set_player_ignore( false );
             __set_police_generator( true );
             set_sensitivity_to_crime( 1.0 );
-            friendDecisionMaker.release();
-            enemyDecisionMaker.release();
-            helpWeapon.destroy_if_exist();
             p.enable_group_recruitment( true );
             enable_train_traffic( true );
             g.release();
@@ -532,10 +648,13 @@ public partial class MAIN {
         }
 
         private void CLEAR_ACTIVE_ENTITIES( LabelGosub label ) {
-            g.release();
+            friendDecisionMaker.release();
+            enemyDecisionMaker.release();
+            helpWeapon.destroy_if_exist();
             enemyMarkers.each( index, m => {
                 enemyMarkers[ index ].disable_if_exist();
                 friendMarkers[ index ].disable_if_exist();
+                targetObjects[ index ].destroy_if_exist();
                 enemyActors[ index ].destroy_if_exist();
                 friendActors[ index ].destroy_if_exist();
                 enemyCars[ index ].destroy_if_exist();
