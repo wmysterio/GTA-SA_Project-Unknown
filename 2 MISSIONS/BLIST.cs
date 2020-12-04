@@ -62,6 +62,8 @@ public partial class MAIN {
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
+            enable_train_traffic( false );
+            destroy_all_trains();
             g.release();
             p.enable_group_recruitment( false ).clear_wanted_level();
             use_gxt_table( "RACETOR" );
@@ -4340,6 +4342,7 @@ public partial class MAIN {
             wait( AUDIO_BG.is_stopped );
             AUDIO_PL.unload();
             wait( AUDIO_PL.is_stopped );
+            enable_train_traffic( true );
             __set_player_ignore( false );
             __set_traffic( 1.0 );
             __set_entered_names( true );

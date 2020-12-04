@@ -36,7 +36,7 @@ public partial class MAIN {
                     dialog.add_replica( "@PHS@10", 1500, true );
                     dialog.add_replica( "@PHS@11", 5000 );
                     dialog.add_replica( "@PHS@12", 5000 );
-                    dialog.OnComplete = delegate { /* create_thread<COP>();*/ };
+                    dialog.OnComplete = delegate { create_thread<CRSTART>(); };
                 } );
 
                 setup.add_dialog( 2, dialog => {

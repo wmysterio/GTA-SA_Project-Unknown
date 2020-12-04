@@ -14,8 +14,8 @@ namespace demo_app_v7 {
             //Generator.SetGTAFolder( @"D:\Programm\GTA_SA" );
             Generator.SetSannyBuidlerFolder( @"D:\Programm\Sanny Builder 3" );
 
-            Generator.Start<MAIN>( true );
-            //Generator.Compile<MAIN>( true );
+            //Generator.Start<MAIN>( /*true*/ );
+            Generator.Compile<MAIN>( true );
 
             Console.ReadKey();
         }

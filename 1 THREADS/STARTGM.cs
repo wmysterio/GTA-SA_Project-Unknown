@@ -2,12 +2,6 @@
 
 public partial class MAIN {
 
-    static Actor a = PlayerActor;
-    static Player p = PlayerChar;
-    static Group g = PlayerGroup;
-
-    // ---------------------------------------------------------------------------------------------------------------------------
-
     public const bool IS_DEBUG = true;
     public const bool DISABLE_RELEASE_CHEATS = false;
 
@@ -20,7 +14,7 @@ public partial class MAIN {
 
     public class STARTGM : Thread {
 
-        Object FS_WALL;
+        static Object FS_WALL;
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -42,12 +36,24 @@ public partial class MAIN {
 
         private void BASE_GAME_SETUP( LabelGosub label ) {
 
-            #region CJ BASE SETUP
+            #region CJ & CV BASE SETUP
             CJ_START_X.value = 2498.9802;
             CJ_START_Y.value = -1685.6517;
             CJ_START_Z.value = 13.4478;
             CJ_TOTAL_MISSION_PASSED.value = 0; // 0;
             #endregion
+
+            #region C.R.A.S.H. BASE SETUP
+            CR_START_X.value = 1546.9318;
+            CR_START_Y.value = -1681.6016;
+            CR_START_Z.value = 13.5588;
+            CR_TOTAL_MISSION_PASSED.value = 0; // 0;
+            #endregion
+
+
+
+
+
 
             #region BLACK LIST BASE SETUP
             BLACK_LIST_START_X.value = 1812.5254;
@@ -57,6 +63,7 @@ public partial class MAIN {
             BLACK_LIST_MISSION_STAGE.value = 0; // 4095; 1023; 255; 63; 15; 7;
             BLACK_LIST_MISSION_NAME.value = "@BLS@0";
             #endregion
+
 
             #region CAR PARK
             CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, 2488.1101, -1683.4895, 12.9456, 89.0883, FBITRUCK, "VITAL", forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );

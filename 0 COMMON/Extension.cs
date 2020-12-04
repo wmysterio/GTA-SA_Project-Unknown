@@ -13,7 +13,7 @@ static class Extension {
     public static void destroy_if_exist<T>( this Vehicle<T> hVehicle ) where T : Vehicle<T> {
         and( hVehicle.is_defined(), delegate {
             hVehicle.remove_references();
-            and( Script.PlayerActor.is_in_vehicle( hVehicle ), delegate {
+            and( PlayerActor.is_in_vehicle( hVehicle ), delegate {
                 hVehicle.set_tires_vulnerable( false ).set_immunities( false );
             }, delegate { hVehicle.destroy(); } );
         } );

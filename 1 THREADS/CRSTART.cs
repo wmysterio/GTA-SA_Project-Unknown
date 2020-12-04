@@ -2,26 +2,17 @@
 
 public partial class MAIN {
 
-    static Car CJ_PROTOTYPE_CAR;
-    static Float CJ_START_X, CJ_START_Y, CJ_START_Z;
-    static Int CJ_TOTAL_MISSION_PASSED;
-    static sString CURRENT_MISSION_NAME;
+    static Float CR_START_X, CR_START_Y, CR_START_Z;
+    static Int CR_TOTAL_MISSION_PASSED;
 
-    public class CJSTART : Thread {
+    public class CRSTART : Thread {
 
         static RadarMarker hMarker;
-
-        Int markerID;
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
-            markerID.value = RadarIconID.CJ;
-            and(
-                CJ_TOTAL_MISSION_PASSED > 2,
-                11 > CJ_TOTAL_MISSION_PASSED // need correct later
-            , delegate { markerID.value = RadarIconID.CESAR_VIALPANDO; } );
-            hMarker.create_long_range( markerID, CJ_START_X, CJ_START_Y, CJ_START_Z ).set_radar_mode( 2 ); 
+            hMarker.create_long_range( RadarIconID.CRASH, CR_START_X, CR_START_Y, CR_START_Z ).set_radar_mode( 2 ); 
             Jump += LOOP;
         }
 
@@ -41,10 +32,10 @@ public partial class MAIN {
                  !is_fading(),
                  !a.is_dead(),
                  !a.is_busted(),
-                 a.is_near_point_3d( 0, CJ_START_X, CJ_START_Y, CJ_START_Z, 30.0, 30.0, 30.0 )
+                 a.is_near_point_3d( 0, CR_START_X, CR_START_Y, CR_START_Z, 30.0, 30.0, 30.0 )
             );
             jf( LOOP2,
-                 a.is_near_point_3d_stopped_on_foot( 1, CJ_START_X, CJ_START_Y, CJ_START_Z, 1.25, 1.25, 2.0 ),
+                 a.is_near_point_3d_stopped_on_foot( 1, CR_START_X, CR_START_Y, CR_START_Z, 1.25, 1.25, 2.0 ),
                  p.is_controllable(),
                  !p.is_on_jetpack()
             );
@@ -55,7 +46,7 @@ public partial class MAIN {
             Gosub += SETUP_MISSION_NAMES;
             __show_mission_name( CURRENT_MISSION_NAME );
             __fade( 0, false );
-            start_mission<CJMISS>();
+            start_mission<CRMISS>();
             end_thread();
         }
 
@@ -65,7 +56,7 @@ public partial class MAIN {
                 "@CJS@08", "@CJS@09", "@CJS@10", "@CJS@11", "@CJS@12", "@CJS@13", "@CJS@14", "@CJS@15"
             };
             for( int i = 0; i < names.Length; i++ ) {
-                and( CJ_TOTAL_MISSION_PASSED == i, delegate {
+                and( CR_TOTAL_MISSION_PASSED == i, delegate {
                     CURRENT_MISSION_NAME.value = names[ i ];
                 } );
             }

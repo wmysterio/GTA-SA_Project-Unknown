@@ -1,98 +1,35 @@
-using System;
-using GTA;
-using GTA.Core;
-using static GTA.Core.Script;
+﻿using GTA;
 //using GTA.Plugins;
 
-static class Extension {
+public partial class MAIN {
 
-    #region VEHICLE
-    public static void do_if_wrecked<T>( this Vehicle<T> hVehicle, Action action ) where T : Vehicle<T> {
-        or( hVehicle.is_wrecked(), hVehicle.is_in_water(), action );
+    static void __toggle_cinematic( bool enable ) {
+        PlayerActor.hide_weapons_in_scene( enable );
+        enable_radar( !enable );
+        enable_hud( !enable );
+        enable_widescreen( enable );
+        text_clear_all();
+        remove_text_box();
     }
-    public static void destroy_if_exist<T>( this Vehicle<T> hVehicle ) where T : Vehicle<T> {
-        and( hVehicle.is_defined(), delegate {
-            hVehicle.remove_references();
-            and( PlayerActor.is_in_vehicle( hVehicle ), delegate {
-                hVehicle.set_tires_vulnerable( false ).set_immunities( false );
-            }, delegate { hVehicle.destroy(); } );
-        } );
+    static void __fade( Int type_bool, bool delay = false ) {
+        set_fade_color_rgb( 0, 0, 0 );
+        fade( type_bool, 500 );
+        if( delay )
+            wait( 500 );
     }
-    public static void extinguish<T>( this Vehicle<T> hVehicle ) where T : Vehicle<T> {
-        and( hVehicle.is_burning(), delegate {
-            hVehicle.set_health( 300 );
-        } );
+    static void __set_police_generator( bool state ) {
+        enable_police_helis( state );
+        enable_police_bikes( state );
+        set_create_random_cops( state );
+        set_cops_chase_criminals( state );
     }
-    #endregion
-
-    #region CHECKPOINT
-    public static void disable_if_exist( this Checkpoint hCheckpoint ) {
-        and( hCheckpoint.is_enabled(), delegate { hCheckpoint.disable(); } );
-    }
-    #endregion
-
-    #region DECISION MAKER
-    public static void create_normal( this DecisionMaker hDecisionMaker, bool stayPut = false ) {
-        hDecisionMaker.load( stayPut ? 0 : 2 ).add_event_response( 36, 1024, 0.0, 100.0, 0.0, 0.0, 0, 1 );
-    }
-    #endregion
-
-    #region OBJECT
-    public static void destroy_if_exist( this GTA.Object hObject ) {
-        and( hObject.is_exists(), delegate { hObject.remove_references().destroy(); } );
-    }
-    #endregion
-
-    #region MARKER
-    public static void disable_if_exist( this Marker hMarker ) {
-        and( hMarker.is_enabled(), delegate { hMarker.disable(); } );
-    }
-    #endregion
-
-    #region PICKUP
-    public static void create_if_need( this Pickup hPickup, Int weaponNumber, Int weaponModel, Int maxAmmo, Float x, Float y, Float z, Int temp ) {
-        and( PlayerActor.is_has_weapon( weaponNumber ), delegate {
-            PlayerActor.get_ammo_in_weapon( weaponNumber, temp );
-            and( maxAmmo > temp, delegate {
-                temp.sub( maxAmmo, temp );
-                hPickup.create_with_ammo( weaponModel, PickupType.ONCE, temp, x, y, z );
-            } );
-        }, delegate {
-            hPickup.create_with_ammo( weaponModel, PickupType.ONCE, maxAmmo, x, y, z );
-        } );
-    }
-    public static void destroy_if_exist( this Pickup hPickup ) {
-        and( hPickup.is_exist(), delegate { hPickup.destroy(); } );
-    }
-    #endregion
-
-    #region ACTOR
-    public static void destroy_if_exist( this Actor hActor ) {
-        and( hActor.is_defined(), delegate { hActor.remove_references().destroy(); } );
-    }
-    public static void put_at( this Actor hActor, Float x, Float y, Float z, Float angle = null ) {
-        hActor.set_position( x, y, z );
-        if( !ReferenceEquals( angle, null ) )
-            hActor.set_z_angle( angle );
-    }
-    public static void extinguish_current_car_if_exist<T>( this Actor hActor, Vehicle<T> hVehicleTemp ) where T : Vehicle<T> {
-        and( hActor.is_in_any_vehicle(), delegate {
-            hActor.get_current_vehicle( hVehicleTemp );
-            hVehicleTemp.extinguish();
-        } );
-    }
-    public static void do_if_dead( this Actor hActor, Action action ) {
-        and( hActor.is_dead(), action );
-    }
-    public static void teleport_without_car( this Actor hActor, Float x, Float y, Float z, Float angle = null ) {
-        and( hActor.is_in_any_vehicle(), delegate {
-            hActor.remove_from_vehicle_and_place_at( x, y, z );
-        }, delegate {
-            hActor.set_position( x, y, z );
-        } );
-        if( !ReferenceEquals( angle, null ) )
-            hActor.set_z_angle( angle );
-    }
-    #endregion
+    static void __renderer_at( Float x, Float y, Float z ) { refresh_game_renderer( x, y ); CAMERA.refresh( x, y, z ); }
+    static void __camera_default() { CAMERA.restore_with_jumpcut().set_behind_player(); }
+    static void __clear_text() { remove_text_box(); text_clear_all(); }
+    static void __set_player_ignore( Int val_bool ) { PlayerChar.ignored_by_cops( val_bool ).ignored_by_everyone( val_bool ); }
+    static void __set_traffic( Float val ) { set_vehicle_traffic_density_multiplier( val ); set_ped_traffic_density_multiplier( val ); }
+    static void __show_mission_name( sString gxt ) { show_text_styled( sString.DUMMY, 1000, 2 ); clear_text_with_style( true ); show_text_styled( gxt, 1000, 2 ); }
+    static void __set_entered_names( Int val_bool ) { show_entered_vehicle_name( val_bool ); show_entered_zone_name( val_bool ); }
+    static void __disable_player_controll_in_cutscene( bool state ) { PlayerActor.set_immunities( state ); PlayerChar.can_move( !state ); }
 
 }

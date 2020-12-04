@@ -3,6 +3,12 @@ using GTA.Plugins;
 
 public partial class MAIN : Thread {
 
+    static Actor a = PlayerActor;
+    static Player p = PlayerChar;
+    static Group g = PlayerGroup;
+
+    // ---------------------------------------------------------------------------------------------------------------------------
+
     public override void START( LabelJump label ) {
         fade( false, 0 );
         set_max_wanted_level( 6 );

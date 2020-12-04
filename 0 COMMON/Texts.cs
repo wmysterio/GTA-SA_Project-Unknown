@@ -38,8 +38,8 @@ public static class Texts {
 
         #region CJ
         .add( "@CJS@00", "Похищение и авария" )
-        .add( "@CJS@01", "Око за око" )
-        .add( "@CJS@02", "" )
+        .add( "@CJS@01", "111" )
+        .add( "@CJS@02", "Око за око" )
         .add( "@CJS@03", "" )
         .add( "@CJS@04", "" )
         .add( "@CJS@05", "" )
