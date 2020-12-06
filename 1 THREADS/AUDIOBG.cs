@@ -3,7 +3,7 @@ using GTA.Plugins;
 
 public partial class MAIN {
 
-    const double CUTSCENE_VOLUME = 0.2;
+    const double CUTSCENE_VOLUME = 0.1;
 
     // ---------------------------------------------------------------------------------------------------------------------------
 

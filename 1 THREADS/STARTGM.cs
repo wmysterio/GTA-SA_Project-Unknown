@@ -9,6 +9,7 @@ public partial class MAIN {
 
     static Timer MISSION_GLOBAL_TIMER_1;
     static StatusText MISSION_GLOBAL_STATUS_TEXT_1, MISSION_GLOBAL_STATUS_TEXT_2;
+    static sString CURRENT_MISSION_NAME;
 
     // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -40,19 +41,28 @@ public partial class MAIN {
             CJ_START_X.value = 2498.9802;
             CJ_START_Y.value = -1685.6517;
             CJ_START_Z.value = 13.4478;
-            CJ_TOTAL_MISSION_PASSED.value = 0; // 0;
+            CJ_TOTAL_MISSION_PASSED.value = 0;
             #endregion
 
             #region C.R.A.S.H. BASE SETUP
-            CR_START_X.value = 1546.9318;
-            CR_START_Y.value = -1681.6016;
-            CR_START_Z.value = 13.5588;
-            CR_TOTAL_MISSION_PASSED.value = 0; // 0;
+            CRASH_START_X.value = 1546.9318;
+            CRASH_START_Y.value = -1681.6016;
+            CRASH_START_Z.value = 13.5588;
+            CRASH_TOTAL_MISSION_PASSED.value = 0;
+            #endregion
+
+            #region REMAX BASE SETUP
+            REMAX_START_X.value = 259.2836;
+            REMAX_START_Y.value = -272.1956;
+            REMAX_START_Z.value = 1.5836;
+            REMAX_TOTAL_MISSION_PASSED.value = 0;
             #endregion
 
 
-
-
+            // DEBUG START
+            CRASH_TOTAL_MISSION_PASSED.value = 2;
+            create_thread<CRSTART>();
+            // DEBUG END
 
 
             #region BLACK LIST BASE SETUP
@@ -63,7 +73,6 @@ public partial class MAIN {
             BLACK_LIST_MISSION_STAGE.value = 0; // 4095; 1023; 255; 63; 15; 7;
             BLACK_LIST_MISSION_NAME.value = "@BLS@0";
             #endregion
-
 
             #region CAR PARK
             CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, 2488.1101, -1683.4895, 12.9456, 89.0883, FBITRUCK, "VITAL", forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );

@@ -2,17 +2,17 @@
 
 public partial class MAIN {
 
-    static Float CRASH_START_X, CRASH_START_Y, CRASH_START_Z;
-    static Int CRASH_TOTAL_MISSION_PASSED;
+    static Float REMAX_START_X, REMAX_START_Y, REMAX_START_Z;
+    static Int REMAX_TOTAL_MISSION_PASSED;
 
-    public class CRSTART : Thread {
+    public class REMAXST : Thread {
 
         static RadarMarker hMarker;
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
-            hMarker.create_long_range( RadarIconID.CRASH, CRASH_START_X, CRASH_START_Y, CRASH_START_Z ).set_radar_mode( 2 ); 
+            hMarker.create_long_range( RadarIconID.RYDER, REMAX_START_X, REMAX_START_Y, REMAX_START_Z ).set_radar_mode( 2 ); 
             Jump += LOOP;
         }
 
@@ -32,10 +32,10 @@ public partial class MAIN {
                  !is_fading(),
                  !a.is_dead(),
                  !a.is_busted(),
-                 a.is_near_point_3d( 0, CRASH_START_X, CRASH_START_Y, CRASH_START_Z, 30.0, 30.0, 30.0 )
+                 a.is_near_point_3d( 0, REMAX_START_X, REMAX_START_Y, REMAX_START_Z, 30.0, 30.0, 30.0 )
             );
             jf( LOOP2,
-                 a.is_near_point_3d_stopped_on_foot( 1, CRASH_START_X, CRASH_START_Y, CRASH_START_Z, 1.25, 1.25, 2.0 ),
+                 a.is_near_point_3d_stopped_on_foot( 1, REMAX_START_X, REMAX_START_Y, REMAX_START_Z, 1.25, 1.25, 2.0 ),
                  p.is_controllable(),
                  !p.is_on_jetpack()
             );
@@ -46,14 +46,17 @@ public partial class MAIN {
             Gosub += SETUP_MISSION_NAMES;
             __show_mission_name( CURRENT_MISSION_NAME );
             __fade( 0, false );
-            start_mission<CRMISS>();
+            //start_mission<REMAX>();
             end_thread();
         }
 
         private void SETUP_MISSION_NAMES( LabelGosub label ) {
-            sString[] names = { "@CRS@00", "@CRS@01", "@CRS@02", "@CRS@03", "@CRS@04", "@CRS@05", "@CRS@06", "@CRS@07", "@CRS@08" };
+            sString[] names = { 
+                "@RMS@00", "@RMS@01", "@RMS@02", "@RMS@03", "@RMS@04", "@RMS@05", "@RMS@06", 
+                "@RMS@07", "@RMS@08", "@RMS@09", "@RMS@10", "@RMS@11", "@RMS@12", "@RMS@13", "@RMS@14"
+            };
             for( int i = 0; i < names.Length; i++ ) {
-                and( CRASH_TOTAL_MISSION_PASSED == i, delegate {
+                and( REMAX_TOTAL_MISSION_PASSED == i, delegate {
                     CURRENT_MISSION_NAME.value = names[ i ];
                 } );
             }

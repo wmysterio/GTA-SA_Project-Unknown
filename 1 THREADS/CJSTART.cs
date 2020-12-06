@@ -2,10 +2,9 @@
 
 public partial class MAIN {
 
-    static Car CJ_PROTOTYPE_CAR;
     static Float CJ_START_X, CJ_START_Y, CJ_START_Z;
     static Int CJ_TOTAL_MISSION_PASSED;
-    static sString CURRENT_MISSION_NAME;
+    static Car CJ_PROTOTYPE_CAR;
 
     public class CJSTART : Thread {
 
