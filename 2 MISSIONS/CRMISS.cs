@@ -273,9 +273,7 @@ public partial class MAIN {
             AUDIO_BG.load( 999997, true );
             wait( AUDIO_BG.is_ready );
             AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
-
             Gosub += SCENE_2B;
-
             load_requested_models( usedModels );
             clear_area( true, 1607.5181, -1697.6582, 12.5469, 300.0 );
             __renderer_at( 1607.5181, -1697.6582, 12.5469 );
@@ -297,12 +295,10 @@ public partial class MAIN {
             AUDIO_BG.set_volume( 1.0 );
             p.clear_wanted_level();
             __fade( true );
-            CashPickup cashPickup = local( Int.IndexOf( helpWeapon ) );
             p.get_money( temp1 );
             and( 1000 > temp1, delegate {
                 temp1.sub( 1000, temp1 );
-                cashPickup.create( temp1, 1610.5455, -1710.3, 13.5469, true );
-                friendMarkers[ 0 ].create_above_pickup( cashPickup ).set_radar_mode( 1 );
+                p.add_money( temp1 );
             } );
             Jump += M2_ENTER_A_CAR;
         }
@@ -313,7 +309,7 @@ public partial class MAIN {
             show_text_highpriority( "@CRS@12", 6000, 1 );
             Cycle += delegate {
                 wait( 0 );
-                __checkProkurorsCar();
+                __checkProsecutorCarAndOther();
                 and( a.is_in_vehicle( player_car ), delegate { Jump += M2_GOTO_8BOMB; } );
             };
         }
@@ -324,7 +320,7 @@ public partial class MAIN {
             show_text_highpriority( "@CRS@16", 6000, 1 );
             Cycle += delegate {
                 wait( 0 );
-                __checkProkurorsCar();
+                __checkProsecutorCarAndOther();
                 and( !a.is_in_vehicle( player_car ), delegate { Jump += M2_ENTER_A_CAR; } );
                 and(
                     p.is_money_greater( 499 ),
@@ -334,14 +330,14 @@ public partial class MAIN {
                 , delegate {
                     checkpoint.disable();
                     LocalTimer1.value = 0;
-                    Jump += WAIT_ATTACH_BOMB; 
+                    Jump += WAIT_ATTACH_BOMB;
                 } );
             };
         }
 
         private void WAIT_ATTACH_BOMB( LabelJump label ) {
             wait( 0 );
-            __checkProkurorsCar();
+            __checkProsecutorCarAndOther();
             and( LocalTimer1 > 3000, delegate { Jump += M2_GOTO_PROKUROR_HOME; } );
             jump( WAIT_ATTACH_BOMB );
         }
@@ -352,7 +348,7 @@ public partial class MAIN {
             show_text_highpriority( "@CRS@12", 6000, 1 );
             Cycle += delegate {
                 wait( 0 );
-                __checkProkurorsCar();
+                __checkProsecutorCarAndOther();
                 and( a.is_in_vehicle( player_car ), delegate { Jump += M2_GOTO_PROKUROR_HOME; } );
             };
         }
@@ -363,7 +359,7 @@ public partial class MAIN {
             show_text_highpriority( "@CRS@18", 6000, 1 );
             Cycle += delegate {
                 wait( 0 );
-                __checkProkurorsCar();
+                __checkProsecutorCarAndOther();
                 and( !a.is_in_vehicle( player_car ), delegate { Jump += M2_ENTER_A_CAR2; } );
                 and(
                     a.is_near_point_3d_stopped_in_vehicle( 1, 1106.9691, -732.1011, 100.4166, 2.0, 2.0, 2.0 ),
@@ -389,26 +385,119 @@ public partial class MAIN {
             jump_passed();
         }
 
-        private void __checkProkurorsCar() {
+        private void __checkProsecutorCarAndOther() {
             and( p.is_wanted_level_greater( 0 ), delegate { ___jump_failed_message( "@CRS@19" ); } );
             player_car.do_if_wrecked( delegate { ___jump_failed_message( "@CRS@14" ); } );
+            and( player_car.is_burning(), delegate { ___jump_failed_message( "@CRS@20" ); } );
             player_car.get_health( temp1 ).get_colors( temp2, temp3 );
             or(
-                player_car.is_burning(),
                 !player_car.is_tire_deflated( 2 ),
                 !player_car.is_door_damaged( DoorNumber.FRONT_LEFT_DOOR ),
-                temp2 != 3,
-                temp3 != 3,
-                temp1 > 500
-            , delegate {
-                ___jump_failed_message( "@CRS@17" );
+                temp2 != 3, temp3 != 3, temp1 > 500
+            , delegate { ___jump_failed_message( "@CRS@17" ); } );
+            and( !a.is_in_area_3d( 0, -20.0, -3000.0, -3000.0, 3000.0, -673.0, 3000.0 ), delegate {
+                ___jump_failed_message( "@CRS@21" );
             } );
         }
         #endregion
 
+        #region Mission 3
         private void MISSION_3( LabelCase l ) {
-            jump_passed();
+
+            Int[] usedModels = { SNIPER, LAPDM1, LVPD1, SFPD1 };
+
+            chdir( @"Sound\CRMISS" );
+            AUDIO_BG.load( 999996, true );
+            wait( AUDIO_BG.is_ready );
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
+            Gosub += SCENE_3B;
+            load_requested_models( usedModels );
+            clear_area( true, 1607.5181, -1697.6582, 12.5469, 300.0 );
+            __renderer_at( 1607.5181, -1697.6582, 12.5469 );
+            a.set_position( 1607.5181, -1697.6582, 12.5469 ).set_z_angle( 180.4397 );
+            clear_area( true, 1725.6798, -1099.2974, 46.5746, 30.0 );
+            enemyActors[ 0 ].create( ActorType.MISSION1, LAPDM1, 1707.0894, -1099.238, 42.5746 );
+            enemyActors[ 1 ].create( ActorType.MISSION1, LVPD1, 1710.8187, -1099.4419, 42.5746 );
+            enemyActors[ 2 ].create( ActorType.MISSION1, LAPDM1, 1716.9115, -1099.559, 42.5746 );
+            enemyActors[ 3 ].create( ActorType.MISSION1, SFPD1, 1725.6798, -1099.2974, 42.5746 );
+            to( index, 0, 2, h => {
+                enemyActors[ index ].set_immunities( true )
+                                    .set_visible( false )
+                                    .set_untargetable( true )
+                                    .lock_position( true )
+                                    .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                                    .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 );
+            } );
+            helpWeapon.create_if_need( WeaponNumber.SNIPERRIFLE, WeaponModel.SNIPER, 10, 1588.5155, -992.762, 38.5221, temp1 );
+            destroy_model( usedModels );
+            __camera_default();
+            __set_entered_names( true );
+            wait( 1000 );
+            __set_player_ignore( false );
+            __disable_player_controll_in_cutscene( false );
+            __set_traffic( 1.0 );
+            AUDIO_BG.set_volume( 1.0 );
+            __fade( true );
+            Jump += M3_WAIT_WHEN_CJ_ON_BRIDGE;
         }
+
+        private void M3_WAIT_WHEN_CJ_ON_BRIDGE( LabelJump label ) {
+            checkpoint.create( 1583.4355, -997.7007, 38.4145 );
+            show_text_highpriority( "@CRS@22", 6000, 1 );
+            Cycle += delegate {
+                wait( 0 );
+                and(
+                    a.is_near_point_3d_on_foot( 1, 1583.4355, -997.7007, 38.4145, 1.0, 1.0, 1.0 ),
+                    a.is_has_weapon( WeaponNumber.SNIPERRIFLE )
+                , delegate {
+                    Jump += SHOW_SCENE_SELECT_TARGET;
+                } );
+            };
+        }
+
+        private void SHOW_SCENE_SELECT_TARGET( LabelJump label ) {
+            checkpoint.disable();
+            __disable_player_controll_in_cutscene( true );
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME );
+            __set_player_ignore( true );
+            __fade( false, true );
+            __set_traffic( 0.0 );
+            Gosub += SCENE_3C;
+            __disable_player_controll_in_cutscene( false );
+            __clear_text();
+            MISSION_GLOBAL_TIMER_1.value = 13000; // 13 * 1000
+            MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
+            wait( 1000 );
+            __camera_default();
+            __fade( true );
+            AUDIO_BG.set_volume( 1.0 );
+            Jump += WAIT_KILL_TARGET;
+        }
+
+        private void WAIT_KILL_TARGET( LabelJump label ) {
+            enemyMarkers[ 0 ].create_above_actor( enemyActors[ 0 ] ).set_radar_mode( 1 );
+            show_text_highpriority( "@CRS@23", 5000, 1 );
+            Cycle += delegate {
+                wait( 0 );
+                and( 0 >= MISSION_GLOBAL_TIMER_1, delegate { ___jump_failed_message( "@CRS@25" ); } );
+                and( !a.is_near_point_3d( 0, 1583.4355, -997.7007, 38.4145, 7.0, 7.0, 7.0 ), delegate { ___jump_failed_message( "@CRS@27" ); } );
+                to( index, 0, 2, h => {
+                    and( enemyActors[ index ].is_dead(), delegate {
+                        and( index == 0, delegate {
+                            a.get_current_weapon( temp1 );
+                            get_weapon_model( temp1, temp1 );
+                            and( temp1 != SNIPER, delegate { ___jump_failed_message( "@CRS@28" ); } );
+                            jump_passed();
+                        }, delegate { ___jump_failed_message( "@CRS@26" ); } );
+                    } );
+                } );
+            };
+        }
+        #endregion
+
+
+
+
         private void MISSION_4( LabelCase l ) {
             jump_passed();
         }
@@ -569,6 +658,54 @@ public partial class MAIN {
             __toggle_cinematic( false );
             Gosub += CLEAR_CUTSCENE_ENTITIES;
         }
+
+        private void SCENE_3B( LabelGosub label ) {
+            //
+            __toggle_cinematic( true );
+            wait( 1000 );
+            //clear_area( 1, 1177.72, -1852.2987, 12.3984, 300.0 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 5000 );
+                Comment = "...";
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            Gosub += CLEAR_CUTSCENE_ENTITIES;
+        }
+
+        private void SCENE_3C( LabelGosub label ) {
+            __toggle_cinematic( true );
+            wait( 500 );
+            set_current_time( 23, 0 );
+            clear_area( 1, 1715.5588, -1081.9011, 22.9062, 7.5 );
+            enemyActors[ 0 ].lock_position( false ).put_at( 1680.3716, -1066.6653, 22.9509, 27.204 );
+            enemyActors[ 1 ].lock_position( false ).put_at( 1678.8251, -1065.3247, 22.8984, 229.0908 );
+            enemyActors[ 2 ].lock_position( false ).put_at( 1681.5151, -1065.0446, 22.9085, 163.0236 );
+            enemyActors[ 3 ].lock_position( false ).put_at( 1677.688, -1066.5552, 22.8984, 257.6511 );
+            enemyActors[ 0 ].task.rotate_to_actor( enemyActors[ 1 ] );
+            enemyActors[ 1 ].task.rotate_to_actor( enemyActors[ 0 ] );
+            enemyActors[ 2 ].task.rotate_to_actor( enemyActors[ 0 ] );
+            enemyActors[ 3 ].task.rotate_to_actor( enemyActors[ 0 ] );
+            __renderer_at( 1673.8917, -1063.4092, 23.8984 );
+            CAMERA.set_position( 1673.8917, -1063.4092, 23.8984 ).set_point_at( 1680.3716, -1066.6653, 23.9509, 2 );
+            wait( 750 );
+            to( index, 0, 2, h => {
+                enemyActors[ index ].set_immunities( false )
+                                    .set_visible( true )
+                                    .set_untargetable( false )
+                                    .set_health( 2 );
+            } );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 1000 );
+                show_text_highpriority( "@CRS@24", 6000, 1 );
+                wait( 6000 );
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            __clear_text();
+        }
         #endregion
 
         #region REPLICAS
@@ -618,7 +755,10 @@ public partial class MAIN {
             and( CRASH_TOTAL_MISSION_PASSED == 2, delegate {
                 create_thread<REMAXST>();
             } );
-            and( CRASH_TOTAL_MISSION_PASSED == 5, delegate {
+            and( CRASH_TOTAL_MISSION_PASSED == 4, delegate {
+                CRASH_START_X.value = 2244.8999;
+                CRASH_START_Y.value = 2558.6262;
+                CRASH_START_Z.value = 10.8193;
                 create_thread<BLSTART>();
                 @return();
             } );

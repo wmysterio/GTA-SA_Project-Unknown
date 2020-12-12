@@ -59,8 +59,13 @@ public partial class MAIN {
             #endregion
 
 
-            // DEBUG START
-            CRASH_TOTAL_MISSION_PASSED.value = 2;
+            // DEBUG START            
+            /*
+            */
+            CRASH_START_X.value = 2244.8999;
+            CRASH_START_Y.value = 2558.6262;
+            CRASH_START_Z.value = 10.8193;
+            CRASH_TOTAL_MISSION_PASSED.value = 4;
             create_thread<CRSTART>();
             // DEBUG END
 

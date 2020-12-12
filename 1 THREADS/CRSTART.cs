@@ -9,6 +9,8 @@ public partial class MAIN {
 
         static RadarMarker hMarker;
 
+        Int currentHour, currentMinute;
+
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
@@ -39,6 +41,11 @@ public partial class MAIN {
                  p.is_controllable(),
                  !p.is_on_jetpack()
             );
+            get_current_time( currentHour, currentMinute );
+            and( 17 > currentHour, delegate {
+                show_text_1number_highpriority( "@CRS@29", 17, 1, 1 );
+                jump( LOOP2 );
+            } );
             __disable_player_controll_in_cutscene( true );
             __set_player_ignore( true );
             __set_traffic( 0.0 );
