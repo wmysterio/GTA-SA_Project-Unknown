@@ -26,7 +26,8 @@ public partial class MAIN {
         sString failedMessage;
         DecisionMaker enemyDecisionMaker, friendDecisionMaker;
         Pickup helpWeapon;
-        Car player_car;
+        Car player_car, tmpCar;
+        Actor tempActor;
         Checkpoint checkpoint;
 
         Array<Int> replicasPlayerTolking = MAX_ARRAY_OF_REPLICAS;
@@ -35,8 +36,9 @@ public partial class MAIN {
         Array<Marker> enemyMarkers = MAX_ARRAY_OF_ACTIVE_COUNT, friendMarkers = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Car> enemyCars = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Object> targetObjects = MAX_ARRAY_OF_ACTIVE_COUNT;
+        Array<ASPack> enemyAS = MAX_ARRAY_OF_ACTIVE_COUNT, friendAS = MAX_ARRAY_OF_ACTIVE_COUNT;
 
-        // 34 + 31 + 6*10 + 2 * 20 = 165 of 1023
+        // 34 + 33 + 8*10 + 2 * 20 = 187 of 1023
 
         Array<Actor> cutcsene_actors = local_array( 0, CUTSCENE_ENTITY_ARRAY_SIZE );
         Array<Car> cutcsene_cars = local_array( 10, CUTSCENE_ENTITY_ARRAY_SIZE );
@@ -425,6 +427,7 @@ public partial class MAIN {
                                     .set_visible( false )
                                     .set_untargetable( true )
                                     .lock_position( true )
+                                    .set_muted( true )
                                     .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
                                     .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 );
             } );
@@ -433,6 +436,7 @@ public partial class MAIN {
             __camera_default();
             __set_entered_names( true );
             wait( 1000 );
+            set_current_time( 22, 0 );
             __set_player_ignore( false );
             __disable_player_controll_in_cutscene( false );
             __set_traffic( 1.0 );
@@ -446,6 +450,9 @@ public partial class MAIN {
             show_text_highpriority( "@CRS@22", 6000, 1 );
             Cycle += delegate {
                 wait( 0 );
+                get_current_time( temp1, temp2 );
+                and( 7 > temp1, delegate { ___jump_failed_message( "@CRS@30" ); } );
+                and( p.is_wanted_level_greater( 0 ), delegate { ___jump_failed_message( "@CRS@19" ); } );
                 and(
                     a.is_near_point_3d_on_foot( 1, 1583.4355, -997.7007, 38.4145, 1.0, 1.0, 1.0 ),
                     a.is_has_weapon( WeaponNumber.SNIPERRIFLE )
@@ -495,12 +502,128 @@ public partial class MAIN {
         }
         #endregion
 
-
-
-
+        #region Mission 4
         private void MISSION_4( LabelCase l ) {
+            chdir( @"Sound\CRMISS" );
+            AUDIO_BG.load( 999995, true );
+            wait( AUDIO_BG.is_ready );
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
+            Gosub += SCENE_4B;
+            clear_area( true, 1814.7668, 60.716, 35.3936, 30.0 );
+            __renderer_at( 1814.7668, 60.716, 35.3936 );
+            a.put_at( 1814.7668, 60.716, 34.3936, 270.6572 );
+            load_requested_models( ROCKETLA );
+            helpWeapon.create_if_need( WeaponNumber.ROCKET, ROCKETLA, 5, 2100.8489, 180.3319, 2.1087, temp1 );
+            destroy_model( ROCKETLA );
+            __camera_default();
+            __set_entered_names( true );
+            wait( 1000 );
+            __set_player_ignore( false );
+            __disable_player_controll_in_cutscene( false );
+            __set_traffic( 1.0 );
+            AUDIO_BG.set_volume( 1.0 );
+            p.clear_wanted_level();
+            __fade( true );
+            Jump += M4_GOTO_POINT;
+        }
+
+        private void M4_GOTO_POINT( LabelJump label ) {
+            checkpoint.create( 2098.8525, 175.1555, 2.8462 );
+            show_text_highpriority( "@CRS@22", 6000, 1 );
+            Cycle += delegate {
+                wait( 0 );
+                and( p.is_wanted_level_greater( 0 ), delegate { ___jump_failed_message( "@CRS@19" ); } );
+                and( a.is_near_point_3d_on_foot( 1, 2098.8525, 175.1555, 2.8462, 1.75, 1.75, 1.75 ), delegate {
+                    Jump += M4_KILL_TARGET;
+                } );
+            };
+        }
+
+        private void M4_KILL_TARGET( LabelJump label ) {
+            friendMarkers[ 0 ].disable();
+            checkpoint.disable();
+
+            Int[] usedModels = { LAPDM1, PREDATOR, WMYPLT };
+
+            load_model( usedModels );
+            wait( is_model_available( usedModels ) );
+            Array<Boat> boats = local_array( Int.IndexOf( enemyCars ), 3 );
+            boats[ 0 ].create( PREDATOR, 2210.0, 396.0, 0.75 ).set_z_angle( 180.0 );
+            boats[ 1 ].create( PREDATOR, 2217.0, 424.0, 0.75 ).set_z_angle( 180.0 );
+            boats[ 2 ].create( PREDATOR, 2225.0, 447.0, 0.75 ).set_z_angle( 180.0 );
+            enemyActors[ 0 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 0 ] );
+            enemyActors[ 1 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 1 ] );
+            enemyActors[ 2 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 2 ] );
+            temp1.random( 0, 3 );
+            boats[ temp1 ].get_driver( tempActor );
+            tempActor.store_coords( tempX1, tempY1, tempZ1, 0.0, -0.35, 0.0 );
+            tempZ1 += 0.02;
+            enemyActors[ 3 ].create( ActorType.MISSION1, WMYPLT, tempX1, tempY1, tempZ1 )
+                            .set_health( 10 )
+                            .task.crouch( true );
+            // DEBUG START
+            //enemyMarkers[ 3 ].create_above_actor( enemyActors[ 3 ] ).set_size( 1 );
+            // DEBUG END
+            destroy_model( usedModels );
+            to( index, 0, 2, h => {
+                boats[ index ].set_to_normal_driver();
+                enemyAS[ index ].define( t => {
+                    t.drive_car_to_point( boats[ index ], 2203.7324, 320.5402, 0.25, 24.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2184.7998, 237.1036, 0.25, 26.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2162.3745, 181.0627, 0.25, 28.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2131.6267, 125.3257, 0.25, 28.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2105.6108, 51.2862 , 0.25, 28.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2043.5387, -142.1585, 0.25, 28.0, 2, NULL, 0 );
+                } );
+                enemyActors[ index ].set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                                    .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 )
+                                    .assign_to_AS_pack( enemyAS[ index ] );
+                enemyAS[ index ].clear();
+                enemyMarkers[ index ].create_above_vehicle( boats[ index ] ).set_size( 1 );
+            } );
+            enemyActors[ 3 ].set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                            .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 );
+            show_text_highpriority( "@CRS@31", 6000, 1 );
+            Cycle += delegate {
+                wait( 0 );
+                and( !a.is_in_area_3d( 0, 2011.8293, 27.9995, -900.0, 2259.7551, 275.5478, 900.0 ), delegate { ___jump_failed_message( "@CRS@27" ); } );
+                to( index, 0, 2, h => {
+                    and( boats[ index ].is_wrecked(), delegate {
+                        enemyMarkers[ index ].disable_if_exist();
+                    } );
+                } );
+                and( enemyActors[ 3 ].is_dead(), delegate {
+                    wait( 3500 );
+                    Jump += M4_END; 
+                } );
+                and( enemyActors[ 3 ].is_near_point_3d( 0, 2043.5387, -142.1585, 0.25, 3.0, 3.0, 3.0 ), delegate {
+                    ___jump_failed_message( "@CRS@32" );
+                } );
+            };
+        }
+
+        private void M4_END( LabelJump label ) {
+            __set_player_ignore( true );
+            __set_traffic( 0.0 );
+            __disable_player_controll_in_cutscene( true );
+            a.extinguish_current_car_if_exist( tmpCar );
+            __fade( 0, true );
+            a.teleport_without_car( 1955.7073, 152.5207, 35.5643 );
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME );
+            gosub( CLEAR_ACTIVE_ENTITIES );
+            Gosub += SCENE_4A;
+            clear_area( true, 1971.9474, 155.4079, 34.3411, 230.7617 );
+            a.put_at( 1971.9474, 155.4079, 34.3411, 230.7617 );
+            __camera_default();
+            wait( 1000 );
+            fade( true, 500 );
+            __disable_player_controll_in_cutscene( false );
+            wait( 500 );
             jump_passed();
         }
+        #endregion
+
+
         private void MISSION_5( LabelCase l ) {
             jump_passed();
         }
@@ -696,6 +819,9 @@ public partial class MAIN {
                                     .set_untargetable( false )
                                     .set_health( 2 );
             } );
+            enemyActors[ 1 ].task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 60000 );
+            enemyActors[ 2 ].task.look_at_actor( enemyActors[ 0 ], -1 );
+            enemyActors[ 3 ].task.look_at_actor( enemyActors[ 1 ], -1 );
             __fade( true, false );
             Scene += delegate {
                 wait( 1000 );
@@ -705,6 +831,74 @@ public partial class MAIN {
             __fade( false, true );
             __toggle_cinematic( false );
             __clear_text();
+        }
+
+        private void SCENE_4B( LabelGosub label ) {
+            //
+            __toggle_cinematic( true );
+            wait( 1000 );
+            //clear_area( 1, 1177.72, -1852.2987, 12.3984, 300.0 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 5000 );
+                Comment = "...";
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            Gosub += CLEAR_CUTSCENE_ENTITIES;
+        }
+
+        private void SCENE_4A( LabelGosub label ) {
+
+            var player = cutcsene_actors[ 0 ];
+
+            chdir( @"Sound\CRMISS\4A" );
+            AUDIO_PL.load( 5 );
+            wait( AUDIO_PL.is_ready );
+            __toggle_cinematic( true );
+            load_requested_models( CELLPHONE );
+            clear_area( 1, 1980.228, 154.8453, 33.2473, 300.0 );
+            player.create( ActorType.MISSION1, NULL, 1980.228, 154.8453, 33.2473 )
+                  .set_z_angle( 131.6025 )
+                  .task.hold_cellphone( true );
+            CAMERA.set_position( 1977.042, 151.7121, 33.3706 ).set_point_at( 1980.228, 154.8453, 33.2473, 2 );
+            wait( 1000 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 1500 );
+
+                AUDIO_PL.play(); // 0
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@CR@022", 4000, 1 );
+                wait( 4000 );
+                player.stop_facial_talk();
+
+                AUDIO_PL.play(); // 1
+                show_text_highpriority( "@CR@023", 5500, 1 );
+                wait( 5500 );
+
+                AUDIO_PL.play(); // 2
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@CR@024", 4000, 1 );
+                wait( 4000 );
+                player.stop_facial_talk();
+
+                AUDIO_PL.play(); // 3
+                show_text_highpriority( "@CR@025", 5500, 1 );
+                wait( 5500 );
+
+                AUDIO_PL.play(); // 4
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@CR@026", 4000, 1 );
+                wait( 4000 );
+                player.stop_facial_talk().task.hold_cellphone( false );
+
+                wait( 1000 );
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            destroy_model( CELLPHONE );
+            Gosub += CLEAR_CUTSCENE_ENTITIES;
         }
         #endregion
 
@@ -755,7 +949,7 @@ public partial class MAIN {
             and( CRASH_TOTAL_MISSION_PASSED == 2, delegate {
                 create_thread<REMAXST>();
             } );
-            and( CRASH_TOTAL_MISSION_PASSED == 4, delegate {
+            and( CRASH_TOTAL_MISSION_PASSED == 5, delegate {
                 CRASH_START_X.value = 2244.8999;
                 CRASH_START_Y.value = 2558.6262;
                 CRASH_START_Z.value = 10.8193;
@@ -809,6 +1003,8 @@ public partial class MAIN {
                 enemyActors[ index ].destroy_if_exist();
                 friendActors[ index ].destroy_if_exist();
                 enemyCars[ index ].destroy_if_exist();
+                enemyAS[ index ].clear();
+                friendAS[ index ].clear();
             } );
             player_car.destroy_if_exist();
         }

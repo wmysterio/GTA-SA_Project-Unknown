@@ -41,10 +41,12 @@ public partial class MAIN {
                  p.is_controllable(),
                  !p.is_on_jetpack()
             );
-            get_current_time( currentHour, currentMinute );
-            and( 17 > currentHour, delegate {
-                show_text_1number_highpriority( "@CRS@29", 17, 1, 1 );
-                jump( LOOP2 );
+            and( CRASH_TOTAL_MISSION_PASSED == 3, delegate {
+                get_current_time( currentHour, currentMinute );
+                and( 17 > currentHour, delegate {
+                    show_text_1number_highpriority( "@CRS@29", 17, 1, 1 );
+                    jump( LOOP2 );
+                } );
             } );
             __disable_player_controll_in_cutscene( true );
             __set_player_ignore( true );
