@@ -31,5 +31,22 @@ public partial class MAIN {
     static void __show_mission_name( sString gxt ) { show_text_styled( sString.DUMMY, 1000, 2 ); clear_text_with_style( true ); show_text_styled( gxt, 1000, 2 ); }
     static void __set_entered_names( Int val_bool ) { show_entered_vehicle_name( val_bool ); show_entered_zone_name( val_bool ); }
     static void __disable_player_controll_in_cutscene( bool state ) { PlayerActor.set_immunities( state ); PlayerChar.can_move( !state ); }
+    static void __normalize_AI_for_vehicle<T>( T hVehicke ) where T : GTA.Core.Vehicle<T> {
+        hVehicke.not_damaged_when_flipped( true )
+                .add_upsidedown_check()
+                .add_stuck_check( 4.0, 3000 )
+                .set_stay_in_fast_lane( true )
+                .set_only_damaged_by_player( true )
+                .set_can_go_against_traffic( false )
+                .enable_validate_position( false );
+    }
+    static void __normalize_AI_for_driver( Actor hActor) {
+        hActor.set_can_be_shot_in_vehicle( false )
+              .set_cant_be_dragged_out( true )
+              .set_stay_in_vehicle_when_jacked( true )
+              .set_suffers_critical_hits( false )
+              .set_get_out_upside_down_vehicle( false )
+              .enable_validate_position( false );
+    }
 
 }

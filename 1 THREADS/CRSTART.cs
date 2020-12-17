@@ -3,7 +3,7 @@
 public partial class MAIN {
 
     static Float CRASH_START_X, CRASH_START_Y, CRASH_START_Z;
-    static Int CRASH_TOTAL_MISSION_PASSED;
+    static Int CRASH_TOTAL_MISSION_PASSED, CRASH_FBI_FLAG;
 
     public class CRSTART : Thread {
 

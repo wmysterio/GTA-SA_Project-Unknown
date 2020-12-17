@@ -16,29 +16,32 @@ public partial class MAIN {
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
-        const ushort MAX_ARRAY_OF_ACTIVE_COUNT = 10, CUTSCENE_ENTITY_ARRAY_SIZE = 10, MAX_ARRAY_OF_REPLICAS = 20,
-                     DELAY_BETWEEN_REPLICAS = 7000;
+        const ushort MAX_ARRAY_OF_ACTIVE_COUNT = 10, CUTSCENE_ENTITY_ARRAY_SIZE = 10, MAX_ARRAY_OF_REPLICAS = 23;
+        //,
+        //             DELAY_BETWEEN_REPLICAS = 7000;
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
         Int index, loaded_path, temp1, temp2, temp3, text_displayed, totalReplicasInDialog;
-        Float tempX1, tempY1, tempZ1;
-        sString failedMessage;
+        Float tempX1, tempY1, tempZ1, tempX2, tempY2, tempZ2, tempAngle;
+        sString failedMessage, tempHash;
         DecisionMaker enemyDecisionMaker, friendDecisionMaker;
         Pickup helpWeapon;
         Car player_car, tmpCar;
         Actor tempActor;
         Checkpoint checkpoint;
+        Panel panel;
 
         Array<Int> replicasPlayerTolking = MAX_ARRAY_OF_REPLICAS;
         Array<sString> replicasInDialog = MAX_ARRAY_OF_REPLICAS;
+        Array<sString> melAnswers = 4;
         Array<Actor> enemyActors = MAX_ARRAY_OF_ACTIVE_COUNT, friendActors = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Marker> enemyMarkers = MAX_ARRAY_OF_ACTIVE_COUNT, friendMarkers = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Car> enemyCars = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<Object> targetObjects = MAX_ARRAY_OF_ACTIVE_COUNT;
         Array<ASPack> enemyAS = MAX_ARRAY_OF_ACTIVE_COUNT, friendAS = MAX_ARRAY_OF_ACTIVE_COUNT;
 
-        // 34 + 33 + 8*10 + 2 * 20 = 187 of 1023
+        // 34 + 40 + 8*10 + 2*4 + 2*23 = 208 of 1023
 
         Array<Actor> cutcsene_actors = local_array( 0, CUTSCENE_ENTITY_ARRAY_SIZE );
         Array<Car> cutcsene_cars = local_array( 10, CUTSCENE_ENTITY_ARRAY_SIZE );
@@ -55,6 +58,10 @@ public partial class MAIN {
             p.enable_group_recruitment( false );
             g.release();
             __set_entered_names( false );
+            __set_police_generator( false );
+            enable_planes_traffic( false );
+            enable_emergency_traffic( false );
+            set_sensitivity_to_crime( 0.0 );
             __set_traffic( 0.0 );
             jump_table( CRASH_TOTAL_MISSION_PASSED, table => {
                 table.Auto += MISSION_0;
@@ -80,7 +87,6 @@ public partial class MAIN {
 
             Int[] usedModels = { TAMPA, COPBIKE, LAPDM1, COLT45 };
 
-            __set_police_generator( false );
             chdir( @"Sound\CRMISS" );
             AUDIO_BG.load( 999999, true );
             wait( AUDIO_BG.is_ready );
@@ -92,7 +98,11 @@ public partial class MAIN {
             clear_area( true, 1607.5181, -1697.6582, 12.5469, 300.0 );
             __renderer_at( 1607.5181, -1697.6582, 12.5469 );
             a.set_position( 1607.5181, -1697.6582, 12.5469 ).set_z_angle( 180.4397 );
-            player_car.create( TAMPA, 1607.8346, -1709.9978, 13.1263 ).set_z_angle( 180.0 ).set_colors( 1, 1 ).remove_references();
+            player_car.create( TAMPA, 1607.8346, -1709.9978, 13.1263 )
+                      .set_z_angle( 180.0 )
+                      .set_colors( 1, 1 )
+                      .remove_references()
+                      .set_is_considered_by_player( true );
             helpWeapon.create_if_need( WeaponNumber.PISTOL, WeaponModel.COLT45, 75, 1611.0355, -1711.2484, 13.5469, temp1 );
             set_radio_station( RadioStation.OFF );
             set_current_time( 23, 58 );
@@ -115,7 +125,6 @@ public partial class MAIN {
             __camera_default();
             __set_entered_names( true );
             wait( 1000 );
-            __set_player_ignore( false );
             set_ped_traffic_density_multiplier( 0.8 );
             set_vehicle_traffic_density_multiplier( 0.7 );
             __disable_player_controll_in_cutscene( false );
@@ -166,7 +175,10 @@ public partial class MAIN {
             __renderer_at( 1607.5181, -1697.6582, 12.5469 );
             a.set_position( 1607.5181, -1697.6582, 12.5469 ).set_z_angle( 180.0 ).set_muted( true );
 
-            player_car.create( TAMPA, 1588.3674, -1717.3674, 13.0984 ).set_z_angle( 90.0 ).set_colors( 1, 1 );
+            player_car.create( TAMPA, 1588.3674, -1717.3674, 13.0984 )
+                      .set_z_angle( 90.0 )
+                      .set_colors( 1, 1 )
+                      .set_is_considered_by_player( true );
 
             friendActors[ 0 ].create_in_vehicle_passenger_seat( ActorType.MISSION1, SPECIAL01, player_car, 0 )
                              .set_max_health( 2000 )
@@ -178,11 +190,10 @@ public partial class MAIN {
             unload_special_actor( 1 );
             __camera_default();
             __set_entered_names( true );
-            chdir( @"Sound\CRMISS\01" );
+            chdir( @"Sound\CRMISS\1Z" );
             AUDIO_PL.load( 12 );
             wait( AUDIO_PL.is_ready );
             wait( 1000 );
-            __set_player_ignore( false );
             __set_traffic( 1.0 );
             __disable_player_controll_in_cutscene( false );
             p.clear_wanted_level();
@@ -217,30 +228,34 @@ public partial class MAIN {
                 show_text_highpriority( "@CRS@13", 5500, 1 );
                 text_displayed.value = true;
                 LocalTimer1.value = 0;
+                temp1.value = 6000;
             } );
             Cycle += delegate {
                 wait( 0 );
+                player_car.do_if_wrecked( delegate { ___jump_failed_message( "@CRS@14" ); } );
+                and( !friendActors[ 0 ].is_in_vehicle( player_car ), delegate { friendActors[ 0 ].task.die(); } );
+                friendActors[ 0 ].do_if_dead( delegate { ___jump_failed_message( "@CRS@15" ); } );
+                and( !a.is_in_vehicle( player_car ), delegate { Jump += M1_ENTER_REMAX_CAR; } );
                 and( totalReplicasInDialog > index, delegate {
-                    and( LocalTimer1 > DELAY_BETWEEN_REPLICAS, delegate {
+                    and( LocalTimer1 > temp1, delegate {
                         a.stop_facial_talk();
-                        and( replicasPlayerTolking[ index ] == true, delegate { a.start_facial_talk( 6000 ); } );
-                        show_text_highpriority( replicasInDialog[ index ], 6000, 1 );
                         AUDIO_PL.play();
+                        wait( DefaultWaitTime );
+                        AUDIO_PL.get_current_length_in_ms( temp1 );
+                        and( 1 > temp1, delegate { temp1.value = 7000; } );
+                        and( replicasPlayerTolking[ index ] == true, delegate { a.start_facial_talk( temp1 ); } );
+                        show_text_highpriority( replicasInDialog[ index ], temp1, 1 );
                         index += 1;
                         LocalTimer1.value = 0;
                     } );
                 } );
                 and( index == totalReplicasInDialog, delegate {
-                    and( LocalTimer1 > DELAY_BETWEEN_REPLICAS, delegate {
+                    and( LocalTimer1 > temp1, delegate {
                         a.stop_facial_talk();
                         AUDIO_BG.set_volume( 1.0 );
                         index += 1;
                     } );
                 } );
-                player_car.do_if_wrecked( delegate { ___jump_failed_message( "@CRS@14" ); } );
-                and( !friendActors[ 0 ].is_in_vehicle( player_car ), delegate { friendActors[ 0 ].task.die(); } );
-                friendActors[ 0 ].do_if_dead( delegate { ___jump_failed_message( "@CRS@15" ); } );
-                and( !a.is_in_vehicle( player_car ), delegate { Jump += M1_ENTER_REMAX_CAR; } );
                 and(
                     a.is_near_point_3d_stopped_in_vehicle( 1, 259.063, -272.0966, 1.5836, 6.0, 6.0, 6.0 ),
                     friendActors[ 0 ].is_in_vehicle( player_car )
@@ -249,7 +264,6 @@ public partial class MAIN {
         }
 
         private void M1_END( LabelJump label ) {
-            __set_player_ignore( true );
             __set_traffic( 0.0 );
             __disable_player_controll_in_cutscene( true );
             player_car.extinguish();
@@ -286,11 +300,14 @@ public partial class MAIN {
                       .set_colors( 3, 3 )
                       .damage_door( DoorNumber.FRONT_LEFT_DOOR )
                       .deflate_tire( 2 )
-                      .set_health( 500 );
+                      .set_health( 500 )
+                      .set_is_considered_by_player( true );
             destroy_model( usedModels );
             __camera_default();
             __set_entered_names( true );
             wait( 1000 );
+            set_sensitivity_to_crime( 1.0 );
+            __set_police_generator( true );
             __set_player_ignore( false );
             __disable_player_controll_in_cutscene( false );
             __set_traffic( 1.0 );
@@ -504,11 +521,13 @@ public partial class MAIN {
 
         #region Mission 4
         private void MISSION_4( LabelCase l ) {
+
             chdir( @"Sound\CRMISS" );
             AUDIO_BG.load( 999995, true );
             wait( AUDIO_BG.is_ready );
             AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
             Gosub += SCENE_4B;
+
             clear_area( true, 1814.7668, 60.716, 35.3936, 30.0 );
             __renderer_at( 1814.7668, 60.716, 35.3936 );
             a.put_at( 1814.7668, 60.716, 34.3936, 270.6572 );
@@ -518,7 +537,6 @@ public partial class MAIN {
             __camera_default();
             __set_entered_names( true );
             wait( 1000 );
-            __set_player_ignore( false );
             __disable_player_controll_in_cutscene( false );
             __set_traffic( 1.0 );
             AUDIO_BG.set_volume( 1.0 );
@@ -572,7 +590,7 @@ public partial class MAIN {
                      .drive_car_to_point( boats[ index ], 2184.7998, 237.1036, 0.25, 26.0, 2, NULL, 0 )
                      .drive_car_to_point( boats[ index ], 2162.3745, 181.0627, 0.25, 28.0, 2, NULL, 0 )
                      .drive_car_to_point( boats[ index ], 2131.6267, 125.3257, 0.25, 28.0, 2, NULL, 0 )
-                     .drive_car_to_point( boats[ index ], 2105.6108, 51.2862 , 0.25, 28.0, 2, NULL, 0 )
+                     .drive_car_to_point( boats[ index ], 2105.6108, 51.2862, 0.25, 28.0, 2, NULL, 0 )
                      .drive_car_to_point( boats[ index ], 2043.5387, -142.1585, 0.25, 28.0, 2, NULL, 0 );
                 } );
                 enemyActors[ index ].set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
@@ -594,7 +612,7 @@ public partial class MAIN {
                 } );
                 and( enemyActors[ 3 ].is_dead(), delegate {
                     wait( 3500 );
-                    Jump += M4_END; 
+                    Jump += M4_END;
                 } );
                 and( enemyActors[ 3 ].is_near_point_3d( 0, 2043.5387, -142.1585, 0.25, 3.0, 3.0, 3.0 ), delegate {
                     ___jump_failed_message( "@CRS@32" );
@@ -623,10 +641,521 @@ public partial class MAIN {
         }
         #endregion
 
+        #region Mission 5
+
+        Int M5_PANEL_SELECTED_ANSWER { get; set; }
+        Int M5_PANEL_INDEX_OF_QUESTION { get; set; }
+        Int M5_PANEL_CREDIT_MULTIPLIER { get; set; }
+        Int M5_PANEL_CJ_ANSWER_SOUND_ID { get; set; }
 
         private void MISSION_5( LabelCase l ) {
+
+            chdir( @"Sound\CRMISS" );
+            AUDIO_BG.load( 999994, true );
+            wait( AUDIO_BG.is_ready );
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME ).play();
+
+            // DEBUG START
+            CRASH_FBI_FLAG.value = true;
+            // DEBUG END
+            and( CRASH_FBI_FLAG == true, delegate { Jump += M5_POLMAV_MISSION; } );
+
+            Gosub += SCENE_5C;
+
+            Int[] usedModels = { FBI, POLMAV };
+
+            load_requested_models( usedModels );
+            clear_area( true, 2370.6177, 2535.188, 10.8203, 300.0 );
+            __renderer_at( 2370.6177, 2535.188, 10.8203 );
+            a.put_at( 2370.6177, 2535.188, 10.8203, 180.0 );
+
+            player_car.create( POLMAV, 2310.6858, 2445.8228, 10.8935 )
+                      .set_z_angle( 155.0 )
+                      .set_door_status( DoorStatus.LOCKED_4 )
+                      .set_health( 5000 );
+
+            friendDecisionMaker.create_normal( true );
+            friendActors[ 0 ].create( ActorType.MISSION1, FBI, 2314.739, 2443.5134, 9.8203 )
+                             .set_z_angle( 143.7115 )
+                             .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                             .set_suffers_critical_hits( false )
+                             .set_max_health( 5000 )
+                             .set_health( 5000 )
+                             .set_untargetable( false )
+                             .set_decision_maker( friendDecisionMaker )
+                             .lock_position( true )
+                             .task.stay_put( true );
+
+            destroy_model( usedModels );
+            __camera_default();
+            __set_entered_names( true );
+            wait( 1000 );
+            __disable_player_controll_in_cutscene( false );
+            set_ped_traffic_density_multiplier( 0.5 );
+            set_vehicle_traffic_density_multiplier( 0.1 );
+            set_sensitivity_to_crime( 1.0 );
+            AUDIO_BG.set_volume( 1.0 );
+            p.clear_wanted_level();
+            __fade( true );
+            friendMarkers[ 0 ].create_above_actor( friendActors[ 0 ] ).set_size( 2 ).set_type( true );
+            show_text_highpriority( "@CRS@33", 6000, 1 );
+            LocalTimer1.value = 0;
+            Cycle += delegate {
+                wait( 0 );
+                friendActors[ 0 ].do_if_dead( delegate { ___jump_failed_message( "@CRS@34" ); } );
+                friendActors[ 0 ].set_z_angle( 143.7115 );
+                player_car.do_if_wrecked( delegate { ___jump_failed_message( "@CRS@14" ); } );
+                and( p.is_wanted_level_greater( 0 ), delegate { ___jump_failed_message( "@CRS@19" ); } );
+                and( LocalTimer1 > 120000, delegate { ___jump_failed_message( "@CRS@35" ); } );
+                and(
+                    a.is_near_actor_3d( 0, friendActors[ 0 ], 30.0, 30.0, 30.0 ),
+                    friendActors[ 0 ].is_on_screen()
+                , delegate {
+                    or(
+                        p.is_aiming_at_actor( friendActors[ 0 ] ),
+                        a.is_firing_weapon(),
+                        friendActors[ 0 ].is_damaged_by_actor( a ),
+                        player_car.is_damaged_by_actor( a )
+                    , delegate { ___jump_failed_message( "@CRS@35" ); } );
+                    friendActors[ 0 ].store_coords( tempX1, tempY1, tempZ1, 0.0, 1.0, 0.0 );
+                    and(
+                        a.is_near_point_3d_on_foot( 1, tempX1, tempY1, tempZ1, 0.75, 0.75, 2.0 ),
+                        !p.is_on_jetpack()
+                    , delegate {
+                        Jump += M5_TESTING_CARL;
+                    } );
+                } );
+            };
+        }
+
+        private void M5_TESTING_CARL( LabelJump label ) {
+
+            Actor mel = friendActors[ 0 ], player = PlayerActor;
+
+            M5_PANEL_SELECTED_ANSWER = temp1;
+            M5_PANEL_INDEX_OF_QUESTION = temp2;
+            M5_PANEL_CREDIT_MULTIPLIER = temp3;
+            M5_PANEL_CJ_ANSWER_SOUND_ID = text_displayed;
+
+            AUDIO_BG.set_volume( CUTSCENE_VOLUME );
+            __disable_player_controll_in_cutscene( true );
+            set_sensitivity_to_crime( 0.0 );
+            a.set_armed_weapon( 0 ).task.crouch( false ).rotate_to_actor( friendActors[ 0 ] );
+            friendActors[ 0 ].set_immunities( true ).task.rotate_to_actor( a );
+            __fade( false, true );
+            chdir( @"Sound\CRMISS\5Z" );
+            AUDIO_PL.load( 23 );
+            wait( AUDIO_PL.is_ready );
+            MISSION_GLOBAL_STATUS_TEXT_1.value = 50;
+            MISSION_GLOBAL_STATUS_TEXT_1.create( StatusTextType.LINE, "@CRS@36" );
+            enable_radar( false );
+            M5_PANEL_INDEX_OF_QUESTION.value = -1;
+            CAMERA.set_position( 2317.2949, 2441.4167, 10.8203 ).set_point_at( 2314.9446, 2442.2773, 10.8203, 2 );
+            wait( 500 );
+            __fade( true, true );
+
+            AUDIO_PL.play( 18 ); // 18
+            mel.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+            show_text_highpriority( "@CR@027", 5000, 1 );
+            wait( 5000 );
+            mel.stop_facial_talk();
+
+            Gosub += M5_QUESTION_1;
+
+            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 0, 1, 2, 3 ]
+            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+            wait( 4500 );
+            player.stop_facial_talk();
+
+            AUDIO_PL.play( 19 ); // 19
+            mel.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_highpriority( "@CR@033", 4500, 1 );
+            wait( 4500 );
+            mel.stop_facial_talk();
+
+            Gosub += M5_QUESTION_2;
+
+            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 4, 5, 6, 7 ]
+            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+            wait( 4500 );
+            player.stop_facial_talk();
+
+            AUDIO_PL.play( 20 ); // 20
+            mel.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_highpriority( "@CR@038", 4500, 1 );
+            wait( 4500 );
+            mel.stop_facial_talk();
+
+            Gosub += M5_QUESTION_3;
+
+            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 8, 9, 10, 11 ]
+            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+            wait( 4500 );
+            player.stop_facial_talk();
+
+            AUDIO_PL.play( 21 ); // 21
+            mel.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_highpriority( "@CR@043", 4500, 1 );
+            wait( 4500 );
+            mel.stop_facial_talk();
+
+            Gosub += M5_QUESTION_4;
+
+            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 12, 13, 14, 15 ]
+            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+            wait( 4500 );
+            player.stop_facial_talk();
+
+            AUDIO_PL.play( 22 ); // 22
+            mel.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_highpriority( "@CR@048", 4500, 1 );
+            wait( 4500 );
+            mel.stop_facial_talk();
+
+            Gosub += M5_QUESTION_5;
+
+            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 16, 17 ]
+            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+            wait( 4500 );
+            player.stop_facial_talk();
+
+            __fade( false, true );
+
+            AUDIO_PL.unload();
+            wait( AUDIO_PL.is_stopped );
+            temp1.value = MISSION_GLOBAL_STATUS_TEXT_1;
+            Gosub += CLEAR_ACTIVE_ENTITIES;
+            __camera_default();
+            wait( 1000 );
+            __fade( true );
+            wait( 500 );
+            and( 80 > temp1, delegate { ___jump_failed_message( "@CRS@35" ); } );
+            CRASH_FBI_FLAG.value = true;
+            CRASH_START_X.value = 2308.8706;
+            CRASH_START_Y.value = 2431.3784;
+            CRASH_START_Z.value = 10.8203;
+            jump( M5_POLMAV_MISSION );
+        }
+
+        private void M5_QUESTION_1( LabelGosub label ) {
+            melAnswers[ 0 ].value = "@CR@028";
+            melAnswers[ 1 ].value = "@CR@029";
+            melAnswers[ 2 ].value = "@CR@030";
+            melAnswers[ 3 ].value = "@CR@031";
+            M5_PANEL_INDEX_OF_QUESTION += 1;
+            Gosub += M5_CREATE_TABLE;
+            Cycle += delegate {
+                wait( 0 );
+                or( is_game_key_pressed( Keys.PED_SPRINT ), is_game_key_pressed( Keys.VEHICLE_ENTER_EXIT ), delegate {
+                    panel.get_active_row( M5_PANEL_SELECTED_ANSWER );
+                    M5_PANEL_CREDIT_MULTIPLIER.value = 0;
+                    and( M5_PANEL_SELECTED_ANSWER == 0, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = -10;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 1, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 10;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 3, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = -5;
+                    } );
+                    MISSION_GLOBAL_STATUS_TEXT_1 += M5_PANEL_CREDIT_MULTIPLIER;
+                    tempHash.value = melAnswers[ M5_PANEL_SELECTED_ANSWER ];
+                    Gosub += M5_FIND_CJ_ANSWER_REPLICA;
+                    panel.remove();
+                    @return();
+                } );
+            };
+        }
+
+        private void M5_QUESTION_2( LabelGosub label ) {
+            melAnswers[ 0 ].value = "@CR@034";
+            melAnswers[ 1 ].value = "@CR@035";
+            melAnswers[ 2 ].value = "@CR@036";
+            melAnswers[ 3 ].value = "@CR@037";
+            M5_PANEL_INDEX_OF_QUESTION += 1;
+            Gosub += M5_CREATE_TABLE;
+            Cycle += delegate {
+                wait( 0 );
+                or( is_game_key_pressed( Keys.PED_SPRINT ), is_game_key_pressed( Keys.VEHICLE_ENTER_EXIT ), delegate {
+                    panel.get_active_row( M5_PANEL_SELECTED_ANSWER );
+                    M5_PANEL_CREDIT_MULTIPLIER.value = 0;
+                    and( M5_PANEL_SELECTED_ANSWER == 0, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = -5;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 1, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = -10;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 3, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 10;
+                    } );
+                    MISSION_GLOBAL_STATUS_TEXT_1 += M5_PANEL_CREDIT_MULTIPLIER;
+                    tempHash.value = melAnswers[ M5_PANEL_SELECTED_ANSWER ];
+                    Gosub += M5_FIND_CJ_ANSWER_REPLICA;
+                    panel.remove();
+                    @return();
+                } );
+            };
+        }
+
+        private void M5_QUESTION_3( LabelGosub label ) {
+            melAnswers[ 0 ].value = "@CR@039";
+            melAnswers[ 1 ].value = "@CR@040";
+            melAnswers[ 2 ].value = "@CR@041";
+            melAnswers[ 3 ].value = "@CR@042";
+            M5_PANEL_INDEX_OF_QUESTION += 1;
+            Gosub += M5_CREATE_TABLE;
+            Cycle += delegate {
+                wait( 0 );
+                or( is_game_key_pressed( Keys.PED_SPRINT ), is_game_key_pressed( Keys.VEHICLE_ENTER_EXIT ), delegate {
+                    panel.get_active_row( M5_PANEL_SELECTED_ANSWER );
+                    M5_PANEL_CREDIT_MULTIPLIER.value = -10;
+                    and( M5_PANEL_SELECTED_ANSWER == 0, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = -5;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 1, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 10;
+                    } );
+                    MISSION_GLOBAL_STATUS_TEXT_1 += M5_PANEL_CREDIT_MULTIPLIER;
+                    tempHash.value = melAnswers[ M5_PANEL_SELECTED_ANSWER ];
+                    Gosub += M5_FIND_CJ_ANSWER_REPLICA;
+                    panel.remove();
+                    @return();
+                } );
+            };
+        }
+
+        private void M5_QUESTION_4( LabelGosub label ) {
+            melAnswers[ 0 ].value = "@CR@044";
+            melAnswers[ 1 ].value = "@CR@045";
+            melAnswers[ 2 ].value = "@CR@046";
+            melAnswers[ 3 ].value = "@CR@047";
+            M5_PANEL_INDEX_OF_QUESTION += 1;
+            Gosub += M5_CREATE_TABLE;
+            Cycle += delegate {
+                wait( 0 );
+                or( is_game_key_pressed( Keys.PED_SPRINT ), is_game_key_pressed( Keys.VEHICLE_ENTER_EXIT ), delegate {
+                    panel.get_active_row( M5_PANEL_SELECTED_ANSWER );
+                    M5_PANEL_CREDIT_MULTIPLIER.value = -10;
+                    and( M5_PANEL_SELECTED_ANSWER == 0, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 10;
+                    } );
+                    and( M5_PANEL_SELECTED_ANSWER == 3, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 5;
+                    } );
+                    MISSION_GLOBAL_STATUS_TEXT_1 += M5_PANEL_CREDIT_MULTIPLIER;
+                    tempHash.value = melAnswers[ M5_PANEL_SELECTED_ANSWER ];
+                    Gosub += M5_FIND_CJ_ANSWER_REPLICA;
+                    panel.remove();
+                    @return();
+                } );
+            };
+        }
+
+        private void M5_QUESTION_5( LabelGosub label ) {
+            melAnswers[ 0 ].value = "@CR@049";
+            melAnswers[ 1 ].value = "@CR@050";
+            melAnswers[ 2 ].value = sString.DUMMY;
+            melAnswers[ 3 ].value = sString.DUMMY;
+            M5_PANEL_INDEX_OF_QUESTION += 1;
+            Gosub += M5_CREATE_TABLE;
+            Cycle += delegate {
+                wait( 0 );
+                or( is_game_key_pressed( Keys.PED_SPRINT ), is_game_key_pressed( Keys.VEHICLE_ENTER_EXIT ), delegate {
+                    panel.get_active_row( M5_PANEL_SELECTED_ANSWER );
+                    M5_PANEL_CREDIT_MULTIPLIER.value = -10;
+                    and( M5_PANEL_SELECTED_ANSWER == 1, delegate {
+                        M5_PANEL_CREDIT_MULTIPLIER.value = 10;
+                    } );
+                    MISSION_GLOBAL_STATUS_TEXT_1 += M5_PANEL_CREDIT_MULTIPLIER;
+                    tempHash.value = melAnswers[ M5_PANEL_SELECTED_ANSWER ];
+                    Gosub += M5_FIND_CJ_ANSWER_REPLICA;
+                    panel.remove();
+                    @return();
+                } );
+            };
+        }
+
+        private void M5_CREATE_TABLE( LabelGosub label ) {
+            panel.create( "@CRS@37", 29.0, 305.0, 566.0, 1, 1, 1, PanelAlign.LEFT )
+                 .set_column_data( 0, sString.DUMMY, melAnswers );
+        }
+
+        private void M5_FIND_CJ_ANSWER_REPLICA( LabelGosub label ) {
+            M5_PANEL_CJ_ANSWER_SOUND_ID.mul( M5_PANEL_INDEX_OF_QUESTION, 4 );
+            M5_PANEL_CJ_ANSWER_SOUND_ID += M5_PANEL_SELECTED_ANSWER;
+        }
+
+        // ---[ MISSION POLMAV ]---
+
+        private void M5_POLMAV_MISSION( LabelJump label ) {
+
+            Int[] usedModels = { FBI, POLMAV, COACH };
+
+            Gosub += SCENE_5B;
+
+            load_requested_models( usedModels );
+            clear_area( true, 2314.739, 2443.5134, 9.8203, 300.0 );
+            __renderer_at( 2314.739, 2443.5134, 9.8203 );
+            a.put_at( 2314.739, 2443.5134, 9.8203, 62.1856 );
+
+            player_car.create( POLMAV, 2310.6858, 2445.8228, 10.8935 )
+                      .set_z_angle( 155.0 )
+                      .set_is_considered_by_player( true )
+                      .store_coords( tempX1, tempY1, tempZ1, 1.0, 0.0, 0.0 );
+
+            friendDecisionMaker.create_normal( true );
+            friendActors[ 0 ].create( ActorType.MISSION1, FBI, tempX1, tempY1, tempZ1 )
+                             .set_z_angle( 62.1856 )
+                             .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                             .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION2 )
+                             .set_decision_maker( friendDecisionMaker )
+                             .attach_to_vehicle( player_car, 1.0, 0.0, 0.0, 2, 180.0, 0 )
+                             .task.crouch( true );
+
+            clear_area( false, 2711.326, 1567.045, 6.2, 50.0 );
+            enemyCars[ 0 ].create( COACH, 2711.326, 1567.045, 6.2 )
+                          .set_z_angle( 175.1379 )
+                          .set_health( 2500 )
+                          .set_door_status( DoorStatus.LOCKED_4 )
+                          .set_immunities( 0, 1, 0, 0, 0 )
+                          .set_tires_vulnerable( true );
+
+            friendActors[ 1 ].create_in_vehicle_driverseat( ActorType.MISSION2, MALE01, enemyCars[ 0 ] )
+                             .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
+                             .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 )
+                             .set_decision_maker( friendDecisionMaker )
+                             .set_immunities( true );
+
+            __normalize_AI_for_vehicle( enemyCars[ 0 ] );
+            __normalize_AI_for_driver( friendActors[ 1 ] );
+
+            destroy_model( usedModels );
+            __camera_default();
+            __set_entered_names( true );
+            wait( 1000 );
+            __disable_player_controll_in_cutscene( false );
+            set_ped_traffic_density_multiplier( 1.0 );
+            AUDIO_BG.set_volume( 1.0 );
+            p.clear_wanted_level();
+            __fade( true );
+            temp1.value = -1;
+            Gosub += M5_BUS_DRIVING_SYSTEM;
+            Jump += M5_ENTER_HELI;
+        }
+
+        private void M5_ENTER_HELI( LabelJump label ) {
+            friendMarkers[ 0 ].disable().create_above_vehicle( player_car ).set_type( 1 ).set_size( 2 );
+            show_text_highpriority( "@CRS@38", 6000, 1 );
+            remove_text_box();
+            Cycle += delegate {
+                wait( 0 );
+                __checkPoliveMavMelAndOther();
+                and( a.is_in_vehicle( player_car ), delegate { Jump += M5_GOTO_BUS; } );
+            };
             jump_passed();
         }
+
+        private void M5_GOTO_BUS( LabelJump label ) {
+            friendMarkers[ 0 ].disable().create_above_vehicle( enemyCars[ 0 ] ).set_type( 1 ).set_size( 2 )
+                              .set_color( MarkerColor.YELLOW ).set_radar_mode( 2 );
+            show_text_highpriority( "@CRS@39", 6500, 1 );
+            Cycle += delegate {
+                wait( 0 );
+                __checkPoliveMavMelAndOther();
+                and( !a.is_in_vehicle( player_car ), delegate { Jump += M5_ENTER_HELI; } );
+                enemyCars[ 0 ].get_position( tempX2, tempY2, tempZ2 );
+                tempZ2 += 4.0;
+                draw_weaponshop_corona( tempX2, tempY2, tempZ2, 2.0, 9, 0, 255, 0, 0 );
+                and( friendActors[ 0 ].is_attached_to_any_vehicle(), delegate {
+                    and(
+                        a.is_near_vehicle_3d( 0, enemyCars[ 0 ], 30.0, 30.0, 30.0 )
+                    , delegate {
+                        and( !is_text_box_displayed( "@CRS@41" ), delegate { show_permanent_text_box( "@CRS@41" ); } );
+                        and( is_game_key_pressed( Keys.CAR_HORN ), delegate {
+                            remove_text_box();
+                            friendActors[ 0 ].detach_from_vehicle().task.jump( true );
+                        } );
+                    }, delegate { remove_text_box(); } );
+                }, delegate {
+                    and( 
+                        friendActors[ 0 ].is_stopped(),
+                        !friendActors[ 0 ].is_dead()
+                    , delegate {
+                        and( !friendActors[ 0 ].is_colliding_with_vehicle( enemyCars[ 0 ] ), delegate {
+                            ___jump_failed_message( "@CRS@42" );
+                        } );
+                        friendActors[ 0 ].get_position( tempX2, tempY2, tempZ2 );
+                        tempZ1.value = tempZ2;
+                        enemyCars[ 0 ].get_position( tempX2, tempY2, tempZ2 );
+                        show_formatted_text_highpriority( "M: %f ~n~C: %f", 10000, tempZ1, tempZ2 );
+                        //jump_passed();
+                    } );
+                } );
+            };
+        }
+
+        private void __checkPoliveMavMelAndOther() {
+            player_car.do_if_wrecked( delegate { ___jump_failed_message( "@CRS@14" ); } );
+            friendActors[ 0 ].do_if_dead( delegate { ___jump_failed_message( "@CRS@34" ); } );
+            enemyCars[ 0 ].do_if_wrecked( delegate { ___jump_failed_message( "@CRS@40" ); } );
+            player_car.get_z_angle( tempAngle );
+            tempAngle -= 90.0;
+            friendActors[ 0 ].set_z_angle( tempAngle );
+            Gosub += M5_BUS_DRIVING_SYSTEM_FIX_BUS;
+            and( enemyCars[ 0 ].is_near_point_2d( 0, tempX1, tempY1, 15.0, 15.0 ), delegate {
+                Gosub += M5_BUS_DRIVING_SYSTEM;
+            } );
+        }
+
+        private void M5_BUS_DRIVING_SYSTEM_FIX_BUS( LabelGosub label ) {
+            or(
+                enemyCars[ 0 ].is_stuck_on_roof(),
+                enemyCars[ 0 ].is_stuck()
+            , delegate {
+                and( !enemyCars[ 0 ].is_on_screen(), delegate {
+                    and( !is_sphere_onscreen( tempX1, tempY1, 6.0, 4.0 ), delegate {
+                        clear_area( false, tempX1, tempY1, 7.0, 10.0 );
+                        enemyCars[ 0 ].set_position( tempX1, tempY1, 10.0 )
+                                      .store_coords( tempX2, tempY2, tempZ2, 0.0, 8.0, 0.0 );
+                        store_path_coords_closest_to_vehicle( tempX2, tempY2, tempZ2, tempX2, tempY2, tempZ2 );
+                        get_angle_between_2d_vectors( tempX1, tempY1, tempX2, tempY2, tempAngle );
+                        enemyCars[ 0 ].set_z_angle( tempAngle );
+                    } );
+                } );
+            } );
+        }
+
+        private void M5_BUS_DRIVING_SYSTEM( LabelGosub label ) {
+
+            Float[] arrX = { 2710.623, 2711.071, 2590.812, 2203.896, 1833.473, 1541.602, 1288.89, 1224.975, 1224.064, 1224.173, 1279.245, 1566.816, 1931.45, 2442.573, 2704.658, 2710.891, 2711.892 };
+            Float[] arrY = { 1397.883, 1175.003, 898.2437, 849.0437, 850.4182, 848.788, 901.789, 1240.59, 1744.703, 2071.703, 2398.683, 2457.233, 2521.858, 2609.429, 2343.654, 2065.317, 1830.5 };
+
+            temp1 += 1;
+            and( temp1 == arrX.Length, delegate { temp1.value = 0; } );
+            for( int i = 0; i < arrX.Length; i++ ) {
+                and( temp1 == i, delegate {
+                    tempX1.value = arrX[ i ];
+                    tempY1.value = arrY[ i ];
+                } );
+            }
+            and( !is_sphere_onscreen( tempX1, tempY1, 6.0, 4.0 ), delegate {
+                clear_area( false, tempX1, tempY1, 7.0, 10.0 );
+            } );
+            Gosub += M5_BUS_DRIVING_SYSTEM_SET_PED_TASK;
+        }
+
+        private void M5_BUS_DRIVING_SYSTEM_SET_PED_TASK( LabelGosub label ) {
+            friendActors[ 1 ].clear_tasks().task.drive_car_to_point( enemyCars[ 0 ], tempX1, tempY1, 6.0, 15.0, 0, NULL, 1 );
+        }
+        #endregion
+
+
+
         private void MISSION_6( LabelCase l ) {
             jump_passed();
         }
@@ -669,29 +1198,29 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                john.start_facial_talk( 21000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 21000 );
-                show_text_highpriority( "@CR@000", 8000, 1 );
-                wait( 8000 );
+                john.start_facial_talk( 19000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 19000 );
+                show_text_highpriority( "@CR@000", 7000, 1 );
+                wait( 7000 );
 
                 AUDIO_PL.play(); // 1
                 show_text_highpriority( "@CR@001", 7000, 1 );
                 wait( 7000 );
 
                 AUDIO_PL.play(); // 2
-                show_text_highpriority( "@CR@002", 6000, 1 );
-                wait( 6000 );
+                show_text_highpriority( "@CR@002", 5000, 1 );
+                wait( 5000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 5000 ).task.perform_animation( "endchat_01", "PED", 4.0, 0, 0, 0, 0, 2000 );
-                show_text_highpriority( "@CR@003", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "endchat_01", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@CR@003", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                john.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
-                show_text_highpriority( "@CR@004", 7000, 1 );
-                wait( 7000 );
+                john.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+                show_text_highpriority( "@CR@004", 4500, 1 );
+                wait( 4500 );
                 john.stop_facial_talk();
 
                 wait( 1000 );
@@ -729,33 +1258,33 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                john.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@CR@017", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@CR@017", 3000, 1 );
+                wait( 3000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@CR@018", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@CR@018", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                john.start_facial_talk( 5500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5500 );
-                show_text_highpriority( "@CR@019", 5500, 1 );
-                wait( 5500 );
+                john.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@CR@019", 4000, 1 );
+                wait( 4000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@CR@020", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@CR@020", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                john.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@CR@021", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@021", 5000, 1 );
+                wait( 5000 );
                 john.stop_facial_talk();
 
                 wait( 1000 );
@@ -900,6 +1429,39 @@ public partial class MAIN {
             destroy_model( CELLPHONE );
             Gosub += CLEAR_CUTSCENE_ENTITIES;
         }
+
+        private void SCENE_5C( LabelGosub label ) {
+            //
+            __toggle_cinematic( true );
+            wait( 1000 );
+            clear_area( 1, 2360.8169, 2549.6118, 15.8785, 300.0 );
+            a.put_at( 2360.8169, 2549.6118, 15.8785 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 5000 );
+                Comment = "Сцена, где Джон рассказывает план внедрения";
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            Gosub += CLEAR_CUTSCENE_ENTITIES;
+        }
+
+        private void SCENE_5B( LabelGosub label ) {
+            //
+            __toggle_cinematic( true );
+            wait( 1000 );
+            clear_area( 1, 2360.8169, 2549.6118, 15.8785, 300.0 );
+            a.put_at( 2360.8169, 2549.6118, 15.8785 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 5000 );
+                Comment = "Сцена, где Мэлл рассказывает план действий";
+            };
+            __fade( false, true );
+            __toggle_cinematic( false );
+            Gosub += CLEAR_CUTSCENE_ENTITIES;
+        }
+
         #endregion
 
         #region REPLICAS
@@ -950,9 +1512,9 @@ public partial class MAIN {
                 create_thread<REMAXST>();
             } );
             and( CRASH_TOTAL_MISSION_PASSED == 5, delegate {
-                CRASH_START_X.value = 2244.8999;
-                CRASH_START_Y.value = 2558.6262;
-                CRASH_START_Z.value = 10.8193;
+                CRASH_START_X.value = 2370.6443;
+                CRASH_START_Y.value = 2547.9795;
+                CRASH_START_Z.value = 10.8203;
                 create_thread<BLSTART>();
                 @return();
             } );
@@ -977,9 +1539,12 @@ public partial class MAIN {
             __set_player_ignore( false );
             __set_police_generator( true );
             set_sensitivity_to_crime( 1.0 );
+            panel.remove();
             p.enable_group_recruitment( true );
             a.set_muted( false );
             enable_train_traffic( true );
+            enable_planes_traffic( true );
+            enable_emergency_traffic( true );
             g.release();
             Gosub += CLEAR_ACTIVE_ENTITIES;
             Gosub += CLEAR_CUTSCENE_ENTITIES;
@@ -991,10 +1556,11 @@ public partial class MAIN {
         }
 
         private void CLEAR_ACTIVE_ENTITIES( LabelGosub label ) {
-            MISSION_GLOBAL_TIMER_1.stop();
             checkpoint.disable_if_exist();
             friendDecisionMaker.release();
             enemyDecisionMaker.release();
+            MISSION_GLOBAL_STATUS_TEXT_1.remove();
+            MISSION_GLOBAL_TIMER_1.stop();
             helpWeapon.destroy_if_exist();
             enemyMarkers.each( index, m => {
                 enemyMarkers[ index ].disable_if_exist();

@@ -61,11 +61,11 @@ public partial class MAIN {
 
             // DEBUG START            
             /*
-            CRASH_START_X.value = 2244.8999;
-            CRASH_START_Y.value = 2558.6262;
-            CRASH_START_Z.value = 10.8193;
+            CRASH_START_X.value = 2370.6443;
+            CRASH_START_Y.value = 2547.9795;
+            CRASH_START_Z.value = 10.8203;
+            CRASH_TOTAL_MISSION_PASSED.value = 5;
             */
-            CRASH_TOTAL_MISSION_PASSED.value = 4;
             create_thread<CRSTART>();
             // DEBUG END
 
