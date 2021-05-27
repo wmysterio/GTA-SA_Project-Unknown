@@ -61,7 +61,7 @@ public partial class MAIN {
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
-        public override void START( LabelJump label ) {
+        public override void START( LabelJump label ) { 
             enable_train_traffic( false );
             destroy_all_trains();
             g.release();
@@ -2085,7 +2085,7 @@ public partial class MAIN {
 
         private void RACE_GENERIC_DUEL_START( LabelJump label ) {
             Gosub += RACE_GENERIC_RESTORE_PLAYER_CONTROL;
-            enemy_car.start_path( loaded_path ).set_path_speed( race_path_speed );
+            enemy_car.start_path( loaded_path ).set_path_speed( race_path_speed )/*.set_collision_detection( false )*/;
             enemy_actor.set_cant_be_dragged_out( true );
             enemy_marker.create_above_vehicle( enemy_car ).set_radar_mode( 2 ).set_size( 2 );
             final_point_x.value = checkpoint_x[ race_stopwatch ];
@@ -2382,7 +2382,7 @@ public partial class MAIN {
             enemy_car_model.value = CarModel.REMINGTN;
             enemy_actor_model.value = ActorModel.VBMYCR;
             loaded_path.value = 903;
-            race_path_speed.value = 0.88;
+            race_path_speed.value = 0.92;
             set_next_vehicle_model_variation( CarModel.SLAMVAN, 0 );
             Gosub += CREATE_PLAYER_CAR;
             Gosub += CREATE_ENEMY_CAR_AND_ACTOR;
@@ -2451,7 +2451,7 @@ public partial class MAIN {
             enemy_car_model.value = CarModel.MAJESTIC;
             enemy_actor_model.value = ActorModel.WFYST;
             loaded_path.value = 904;
-            race_path_speed.value = 0.9;
+            race_path_speed.value = 0.91;
             Gosub += CREATE_PLAYER_CAR;
             Gosub += CREATE_ENEMY_CAR_AND_ACTOR;
             Gosub += CUSTOMIZE_CARS3;
@@ -2519,7 +2519,7 @@ public partial class MAIN {
             enemy_car_model.value = CarModel.FLASH;
             enemy_actor_model.value = ActorModel.VWMYCD;
             loaded_path.value = 905;
-            race_path_speed.value = 0.9;
+            race_path_speed.value = 0.94;
             Gosub += CREATE_PLAYER_CAR;
             Gosub += CREATE_ENEMY_CAR_AND_ACTOR;
             Gosub += CUSTOMIZE_CARS2;
@@ -2699,7 +2699,7 @@ public partial class MAIN {
             enemy_car_model.value = CarModel.INFERNUS;
             enemy_actor_model.value = ActorModel.SWMYCR;
             loaded_path.value = 907;
-            race_path_speed.value = 0.84;
+            race_path_speed.value = 0.94;
             Gosub += CREATE_PLAYER_CAR;
             Gosub += CREATE_ENEMY_CAR_AND_ACTOR;
             Gosub += CUSTOMIZE_CARS1A;
@@ -2903,88 +2903,88 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                john.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@0", 5000, 1 );
-                wait( 5000 );
+                john.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@BL@0", 3000, 1 );
+                wait( 3000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 3000 );
-                show_text_highpriority( "@BL@1", 3000, 1 );
-                wait( 3000 );
+                player.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@1", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                john.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@2", 5000, 1 );
+                john.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@2", 3000, 1 );
                 wait( 500 );
                 john.task.perform_animation( "FUCKU", "PED", 4.0, 0, 0, 0, 0, 1330 );
-                wait( 4500 );
+                wait( 2500 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@3", 6000, 1 );
-                wait( 6000 );
+                player.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@3", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                john.start_facial_talk( 9000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 9000 );
-                show_text_highpriority( "@BL@4", 9000, 1 );
-                wait( 9000 );
+                john.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
+                show_text_highpriority( "@BL@4", 6000, 1 );
+                wait( 6000 );
                 john.stop_facial_talk();
 
                 CAMERA.set_position( 1819.4132, -1123.8369, 24.0781 ).set_point_at( 1813.1891, -1111.0835, 24.0781, 2 );
 
                 AUDIO_PL.play(); // 5
-                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                player.start_facial_talk( 4000 );
-                show_text_highpriority( "@BL@5", 4000, 1 );
-                wait( 4000 );
+                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                player.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@5", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
-                CAMERA.transverse_position( 1819.4132, -1123.8369, 24.0781, 1817.4315, -1119.6432, 24.0781, 13200, 1 );
+                CAMERA.transverse_position( 1819.4132, -1123.8369, 24.0781, 1817.4315, -1119.6432, 24.0781, 9000, 1 );
 
                 AUDIO_PL.play(); // 6
-                john.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@6", 8000, 1 );
-                wait( 8000 );
+                john.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
+                show_text_highpriority( "@BL@6", 6000, 1 );
+                wait( 6000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 7
-                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                player.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@7", 5000, 1 );
-                wait( 5000 );
+                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                player.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@7", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 CAMERA.set_position( 1817.4315, -1119.6432, 24.0781 ).set_point_at( 1813.1891, -1111.0835, 24.0781, 2 );
 
                 AUDIO_PL.play(); // 8
-                john.start_facial_talk( 13000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 13000 );
-                show_text_highpriority( "@BL@8", 13000, 1 );
-                wait( 13000 );
+                john.start_facial_talk( 9000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 9000 );
+                show_text_highpriority( "@BL@8", 9000, 1 );
+                wait( 9000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 9
-                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 6500 );
-                player.start_facial_talk( 6500 );
-                show_text_highpriority( "@BL@9", 6500, 1 );
-                wait( 6500 );
+                john.task.perform_animation( "XPRESSscratch", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@9", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 10
-                john.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@10", 8000, 1 );
-                wait( 8000 );
+                john.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
+                show_text_highpriority( "@BL@10", 7000, 1 );
+                wait( 7000 );
                 john.stop_facial_talk();
 
                 john.clear_tasks().set_walk_style( WalkStyle.FATMAN ).task.walk_to_point( 1816.9677, -1144.6384, 24.0024, 180.5562, 1.0 );
                 wait( 2000 );
 
                 AUDIO_PL.play(); // 11
-                player.start_facial_talk( 3000 );
-                show_text_highpriority( "@BL@11", 3000, 1 );
+                player.start_facial_talk( 1500 );
+                show_text_highpriority( "@BL@11", 1500, 1 );
                 wait( 3000 );
                 player.stop_facial_talk().task.shuffle_to_next_car_seat( car );
                 wait( 500 );
@@ -3058,29 +3058,29 @@ public partial class MAIN {
                 darius.task.look_at_actor( sonny, -1 );
 
                 AUDIO_PL.play(); // 0
-                darius.start_facial_talk( 4000 );
-                show_text_highpriority( "@BL@12", 4000, 1 );
-                wait( 4000 );
+                darius.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@12", 2000, 1 );
+                wait( 2000 );
                 darius.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                sonny.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@13", 4000, 1 );
-                wait( 4000 );
+                sonny.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@13", 2000, 1 );
+                wait( 2000 );
                 sonny.stop_facial_talk();
 
                 leicter.task.look_at_actor( sonny, -1 );
 
                 AUDIO_PL.play(); // 2
-                leicter.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@14", 5000, 1 );
-                wait( 5000 );
+                leicter.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@14", 3000, 1 );
+                wait( 3000 );
                 leicter.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                sonny.start_facial_talk( 1500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 1500 );
-                show_text_highpriority( "@BL@15", 1500, 1 );
-                wait( 1500 );
+                sonny.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@15", 2000, 1 );
+                wait( 2000 );
                 sonny.stop_facial_talk();
 
                 CAMERA.set_position( 682.0664, -457.8268, -24.6172 ).set_point_at( 687.1406, -460.0067, -25.4067, 2 );
@@ -3089,53 +3089,53 @@ public partial class MAIN {
                 vik.task.look_at_actor( sonny, -1 );
 
                 AUDIO_PL.play(); // 4
-                vik.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@16", 6000, 1 );
-                wait( 6000 );
+                vik.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@16", 5000, 1 );
+                wait( 5000 );
                 vik.stop_facial_talk();
 
                 darius.task.look_at_actor( player, -1 );
                 vik.task.look_at_actor( player, -1 );
 
                 AUDIO_PL.play(); // 5
-                darius.start_facial_talk( 8000 );
-                show_text_highpriority( "@BL@17", 8000, 1 );
-                wait( 8000 );
+                darius.start_facial_talk( 6000 );
+                show_text_highpriority( "@BL@17", 6000, 1 );
+                wait( 6000 );
                 darius.stop_facial_talk();
 
                 CAMERA.set_point_at( 684.6844, -456.9572, -25.1099, 1 );
 
                 AUDIO_PL.play(); // 6
-                player.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@18", 6000, 1 );
-                wait( 6000 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@18", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 CAMERA.set_point_at( 687.1406, -460.0067, -25.4067, 1 );
 
                 AUDIO_PL.play(); // 7
-                darius.start_facial_talk( 8000 );
-                show_text_highpriority( "@BL@19", 8000, 1 );
-                wait( 8000 );
+                darius.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@19", 5000, 1 );
+                wait( 5000 );
                 darius.stop_facial_talk();
 
                 AUDIO_PL.play(); // 8
-                show_text_highpriority( "@BL@20", 6000, 1 );
-                wait( 6000 );
+                show_text_highpriority( "@BL@20", 3000, 1 );
+                wait( 3000 );
 
                 leicter.task.look_at_actor( darius, -1 );
                 darius.task.look_at_actor( leicter, -1 );
 
                 AUDIO_PL.play(); // 9
-                leicter.start_facial_talk( 8000 );
-                show_text_highpriority( "@BL@21", 8000, 1 );
-                wait( 8000 );
+                leicter.start_facial_talk( 7000 );
+                show_text_highpriority( "@BL@21", 7000, 1 );
+                wait( 7000 );
                 leicter.stop_facial_talk();
 
                 AUDIO_PL.play(); // 10
-                darius.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@22", 6000, 1 );
-                wait( 6000 );
+                darius.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@22", 4000, 1 );
+                wait( 4000 );
                 darius.stop_facial_talk();
             };
             AUDIO_PL.play( -1 );
@@ -3157,19 +3157,19 @@ public partial class MAIN {
                 wait( 2200 );
 
                 AUDIO_PL.play( 11 ); // 11
-                player.start_facial_talk( 4000 );
-                show_text_highpriority( "@BL@23", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@23", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 12
-                show_text_highpriority( "@BL@24", 3000, 1 );
-                wait( 3000 );
+                show_text_highpriority( "@BL@24", 2000, 1 );
+                wait( 2000 );
 
                 AUDIO_PL.play(); // 13
-                player.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@25", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@25", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 14
@@ -3210,21 +3210,21 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                sonny.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@27", 8000, 1 );
-                wait( 8000 );
+                sonny.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
+                show_text_highpriority( "@BL@27", 7000, 1 );
+                wait( 7000 );
                 sonny.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                sonny.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@28", 8000, 1 );
-                wait( 8000 );
+                sonny.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@28", 5000, 1 );
+                wait( 5000 );
                 sonny.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                player.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@29", 8000, 1 );
-                wait( 6000 );
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@29", 5000, 1 );
+                wait( 3000 );
                 sonny.task.rotate_angle( 90.0 );
                 player.stop_facial_talk().set_walk_style( WalkStyle.PLAYER ).task.walk_to_point( 1715.9048, -716.9094, 48.357, 75.8999, 1.0 );
                 wait( 2000 );
@@ -3253,6 +3253,7 @@ public partial class MAIN {
             load_car_component( 1022, 1001, 1081 );
             load_requested_models( usedModels );
             wait( is_car_component_available( 1022, 1001, 1081 ) );
+            chdir( @"Sound\BLIST\6A" );
             AUDIO_PL.load( 4 );
             wait( AUDIO_PL.is_ready );
             car.create( CarModel.PRIMO, 2831.084, -1886.3143, 10.5485 ).set_z_angle( 152.0031 ).set_colors( 122, 16 )
@@ -3274,27 +3275,27 @@ public partial class MAIN {
                 player.task.rotate_to_actor( sonny );
 
                 AUDIO_PL.play(); // 0
-                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@30", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@BL@30", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                sonny.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@31", 6000, 1 );
-                wait( 6000 );
+                sonny.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@31", 4000, 1 );
+                wait( 4000 );
                 sonny.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                player.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
-                show_text_highpriority( "@BL@32", 7000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@32", 5000, 1 );
+                wait( 3000 );
                 player.task.walk_to_point( 2836.5532, -1905.2063, 10.9375, 182.4127, 1.0 );
                 wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                sonny.start_facial_talk( 2000 ).task.perform_animation( "FUCKU", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                sonny.start_facial_talk( 2000 ).task.perform_animation( "FUCKU", "PED", 4.0, 0, 0, 0, 0, 1330 );
                 show_text_highpriority( "@BL@33", 2000, 1 );
                 wait( 2000 );
                 sonny.stop_facial_talk();
@@ -3341,39 +3342,39 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                vik.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@34", 6000, 1 );
-                wait( 6000 );
+                vik.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@34", 5000, 1 );
+                wait( 5000 );
                 vik.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                markus.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 9000 );
-                show_text_highpriority( "@BL@35", 5000, 1 );
-                wait( 5000 );
-                markus.stop_facial_talk();
-
-                AUDIO_PL.play(); // 2
-                markus.start_facial_talk( 4000 ).task.look_at_actor( player, 10000 );
-                show_text_highpriority( "@BL@36", 4000, 1 );
+                markus.start_facial_talk( 6500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6500 );
+                show_text_highpriority( "@BL@35", 3000, 1 );
                 wait( 4000 );
+
+                markus.task.look_at_actor( player, 10000 );
+                wait( 500 );
+                AUDIO_PL.play(); // 2
+                show_text_highpriority( "@BL@36", 2000, 1 );
+                wait( 2000 );
                 markus.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 ).look_at_actor( markus, 6000 );
-                show_text_highpriority( "@BL@37", 6000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 ).look_at_actor( markus, 4000 );
+                show_text_highpriority( "@BL@37", 4000, 1 );
+                wait( 3000 );
                 player.task.perform_animation( "FUCKU", "PED", 4.0, 0, 0, 0, 0, 1330 );
                 darius.task.rotate_to_actor( player );
-                wait( 2000 );
+                wait( 1000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                darius.start_facial_talk( 11000 );
-                player.task.look_at_actor( darius, 12000 );
-                markus.task.look_at_actor( darius, 12000 );
-                darius.task.look_at_actor( player, 12000 );
-                show_text_highpriority( "@BL@38", 11000, 1 );
-                wait( 11000 );
+                darius.start_facial_talk( 7000 );
+                player.task.look_at_actor( darius, 8000 );
+                markus.task.look_at_actor( darius, 8000 );
+                darius.task.look_at_actor( player, 8000 );
+                show_text_highpriority( "@BL@38", 7000, 1 );
+                wait( 7000 );
                 darius.stop_facial_talk();
                 wait( 1000 );
             };
@@ -3416,13 +3417,13 @@ public partial class MAIN {
                 wait( 2000 );
 
                 AUDIO_PL.play(); //0
-                show_text_highpriority( "@BL@39", 12000, 1 );
-                wait( 12000 );
+                show_text_highpriority( "@BL@39", 9000, 1 );
+                wait( 9000 );
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 4000 );
-                show_text_highpriority( "@BL@40", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@40", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk().task.hold_cellphone( false );
                 wait( 1000 );
             };
@@ -3474,21 +3475,21 @@ public partial class MAIN {
                 wait( 1000 );
 
                 AUDIO_PL.play(); // 0
-                leicter.start_facial_talk( 7000 );
-                show_text_highpriority( "@BL@41", 7000, 1 );
-                wait( 7000 );
+                leicter.start_facial_talk( 8000 );
+                show_text_highpriority( "@BL@41", 8000, 1 );
+                wait( 8000 );
                 leicter.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@42", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@42", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                leicter.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@43", 5000, 1 );
-                wait( 5000 );
+                leicter.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@43", 4000, 1 );
+                wait( 4000 );
                 leicter.stop_facial_talk();
 
                 wait( 1000 );
@@ -3531,7 +3532,7 @@ public partial class MAIN {
                 CAMERA.set_point_at( -1868.9446, 1422.1292, 7.1811, 1 );
 
                 AUDIO_PL.play(); // 0
-                show_text_highpriority( "@BL@44", 4000, 1 );
+                show_text_highpriority( "@BL@44", 2000, 1 );
 
                 wait( crouch.is_near_point_3d_on_foot( false, -1869.1304, 1421.637, 7.1813, 1.25, 1.25, 1.25 ) );
 
@@ -3539,57 +3540,57 @@ public partial class MAIN {
                 player.task.look_at_actor( crouch, 90000 );
 
                 AUDIO_PL.play(); // 1
-                crouch.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@45", 4000, 1 );
-                wait( 4000 );
+                crouch.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@45", 2000, 1 );
+                wait( 2000 );
                 crouch.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
-                show_text_highpriority( "@BL@46", 2000, 1 );
-                wait( 2000 );
+                player.start_facial_talk( 1500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 1500 );
+                show_text_highpriority( "@BL@46", 1500, 1 );
+                wait( 1500 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                crouch.start_facial_talk( 6500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6500 );
-                show_text_highpriority( "@BL@47", 6500, 1 );
-                wait( 6500 );
+                crouch.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@47", 5000, 1 );
+                wait( 5000 );
                 crouch.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@48", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@48", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 5
-                crouch.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@49", 6000, 1 );
-                wait( 6000 );
+                crouch.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@49", 5000, 1 );
+                wait( 5000 );
                 crouch.stop_facial_talk();
 
                 AUDIO_PL.play(); // 6
-                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@50", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@BL@50", 3000, 1 );
+                wait( 3000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 7
-                crouch.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
-                show_text_highpriority( "@BL@51", 7000, 1 );
-                wait( 7000 );
+                crouch.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@51", 5000, 1 );
+                wait( 5000 );
                 crouch.stop_facial_talk();
 
                 AUDIO_PL.play(); // 8
-                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@52", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@52", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 9
-                crouch.start_facial_talk( 8000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 8000 );
-                show_text_highpriority( "@BL@53", 8000, 1 );
-                wait( 8000 );
+                crouch.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
+                show_text_highpriority( "@BL@53", 6000, 1 );
+                wait( 6000 );
                 crouch.stop_facial_talk();
 
                 wait( 1000 );
@@ -3624,27 +3625,27 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                marcy.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@54", 5000, 1 );
-                wait( 5000 );
+                marcy.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@54", 4000, 1 );
+                wait( 4000 );
                 marcy.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@55", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@55", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                marcy.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@56", 6000, 1 );
-                wait( 6000 );
+                marcy.start_facial_talk( 7000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 7000 );
+                show_text_highpriority( "@BL@56", 7000, 1 );
+                wait( 7000 );
                 marcy.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@BL@57", 4000, 1 );
-                wait( 4000 );
+                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@57", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
             };
@@ -3684,9 +3685,9 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                marcy.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@58", 5000, 1 );
-                wait( 5000 );
+                marcy.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@58", 4000, 1 );
+                wait( 4000 );
                 marcy.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
@@ -3696,9 +3697,9 @@ public partial class MAIN {
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                marcy.start_facial_talk( 3000 );
-                show_text_highpriority( "@BL@60", 3000, 1 );
-                wait( 3000 );
+                marcy.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@60", 2000, 1 );
+                wait( 2000 );
                 marcy.stop_facial_talk();
 
             };
@@ -3744,29 +3745,29 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                vik.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@61", 6000, 1 );
-                wait( 6000 );
+                vik.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@61", 5000, 1 );
+                wait( 5000 );
                 vik.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1
-                player.start_facial_talk( 3000 );
-                show_text_highpriority( "@BL@62", 3000, 1 );
-                wait( 3000 );
+                player.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@62", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 2
-                vik.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@63", 6000, 1 );
-                wait( 6000 );
+                vik.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@63", 5000, 1 );
+                wait( 5000 );
                 vik.stop_facial_talk();
 
                 CAMERA.set_position( 1389.043, -947.5217, 34.3875 ).set_point_at( 1391.0114, -942.3994, 34.2981, 2 );
 
                 AUDIO_PL.play(); // 3
-                player.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@64", 6000, 1 );
-                wait( 6000 );
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@64", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
@@ -3809,16 +3810,16 @@ public partial class MAIN {
                 wait( is_wav_ended( 1 ) );
 
                 AUDIO_PL.play(); // 0
-                show_text_highpriority( "@BL@66", 6000, 1 );
-                wait( 6000 );
+                show_text_highpriority( "@BL@66", 5000, 1 );
+                wait( 5000 );
 
                 AUDIO_PL.play(); // 1
-                show_text_highpriority( "@BL@67", 6500, 1 );
-                wait( 6500 );
+                show_text_highpriority( "@BL@67", 5000, 1 );
+                wait( 5000 );
 
                 AUDIO_PL.play(); // 2
-                show_text_highpriority( "@BL@68", 6000, 1 );
-                wait( 6500 );
+                show_text_highpriority( "@BL@68", 5000, 1 );
+                wait( 5000 );
 
             };
             __fade( 0, true );
@@ -3871,41 +3872,39 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                crouch.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@69", 6000, 1 );
-                wait( 6000 );
-                crouch.stop_facial_talk();
+                crouch.start_facial_talk( 10000 );
+                show_text_highpriority( "@BL@69", 5000, 1 );
+                wait( 5000 );
 
                 AUDIO_PL.play(); // 1
-                crouch.start_facial_talk( 6500 );
-                show_text_highpriority( "@BL@70", 6500, 1 );
-                wait( 6500 );
+                show_text_highpriority( "@BL@70", 5000, 1 );
+                wait( 5000 );
                 crouch.stop_facial_talk();
 
                 CAMERA.set_position( 1142.318, 1923.061, 11.5203 ).set_point_at( 1141.6296, 1923.2518, 11.5203, 2 );
 
                 AUDIO_PL.play(); // 2
-                darius.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@71", 6000, 1 );
-                wait( 6000 );
+                darius.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@71", 5000, 1 );
+                wait( 5000 );
                 darius.stop_facial_talk();
 
                 CAMERA.set_position( 1143.1323, 1925.5757, 11.3203 ).set_point_at( 1143.2766, 1926.6119, 11.3203, 2 );
 
                 AUDIO_PL.play(); // 3
-                marcy.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@72", 6000, 1 );
-                wait( 6000 );
+                marcy.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
+                show_text_highpriority( "@BL@72", 3000, 1 );
+                wait( 3000 );
                 marcy.stop_facial_talk();
 
                 CAMERA.set_position( 1142.318, 1923.061, 11.5203 ).set_point_at( 1141.6296, 1923.2518, 11.5203, 2 );
 
                 AUDIO_PL.play(); // 4
-                darius.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
-                show_text_highpriority( "@BL@73", 4500, 1 );
-                wait( 3000 );
+                darius.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 1500 );
+                show_text_highpriority( "@BL@73", 2000, 1 );
+                wait( 1500 );
                 darius.task.perform_animation( "FUCKU", "PED", 4.0, 0, 0, 0, 0, 1330 );
-                wait( 1000 );
+                wait( 500 );
                 darius.stop_facial_talk();
 
             };
@@ -3962,11 +3961,11 @@ public partial class MAIN {
                 CAMERA.set_position( -700.0531, 971.4545, 12.8291 ).set_point_at( -698.5269, 969.4545, 12.8291, 2 );
 
                 AUDIO_PL.play(); // 1
-                darius.start_facial_talk( 6000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 6000 );
-                show_text_highpriority( "@BL@75", 6000, 1 );
+                darius.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@BL@75", 5000, 1 );
                 wait( 3000 );
                 darius.task.rotate_to_actor( crouch );
-                wait( 3000 );
+                wait( 2000 );
                 darius.stop_facial_talk();
 
                 CAMERA.set_position( -711.7541, 964.8339, 12.3475 ).set_point_at( -699.7541, 964.8339, 12.3475, 1 );
@@ -3974,24 +3973,24 @@ public partial class MAIN {
                 wait( darius.is_stopped() );
 
                 AUDIO_PL.play(); // 2
-                player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
-                show_text_highpriority( "@BL@76", 4500, 1 );
-                wait( 4500 );
+                player.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@76", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 3
-                crouch.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
-                show_text_highpriority( "@BL@77", 3000, 1 );
+                crouch.start_facial_talk( 1500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 1500 );
+                show_text_highpriority( "@BL@77", 1500, 1 );
                 darius.task.rotate_to_actor( player );
-                wait( 3000 );
+                wait( 1500 );
                 crouch.stop_facial_talk();
 
                 CAMERA.set_position( -698.7541, 962.8339, 13.3475 ).set_point_at( -699.7541, 964.8339, 12.3475, 2 );
 
                 AUDIO_PL.play(); // 4
-                player.start_facial_talk( 3000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3000 );
-                show_text_highpriority( "@BL@78", 3000, 1 );
-                wait( 3000 );
+                player.start_facial_talk( 2000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 2000 );
+                show_text_highpriority( "@BL@78", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
             };
@@ -4073,37 +4072,37 @@ public partial class MAIN {
                 wait( 1500 );
 
                 AUDIO_PL.play(); // 0
-                show_text_highpriority( "@BL@79", 8000, 1 );
-                wait( 9500 );
+                show_text_highpriority( "@BL@79", 6000, 1 );
+                wait( 7500 );
 
                 CAMERA.set_position( -1643.3318, 2732.0649, 58.8551 ).set_point_at( -1630.92, 2723.8879, 57.7919, 2 );
 
                 AUDIO_PL.play(); // 1
-                marcy.start_facial_talk( 7000 );
-                show_text_highpriority( "@BL@80", 7000, 1 );
-                wait( 7000 );
+                marcy.start_facial_talk( 6000 );
+                show_text_highpriority( "@BL@80", 6000, 1 );
+                wait( 6000 );
                 marcy.stop_facial_talk();
 
                 CAMERA.set_position( -1633.8379, 2716.8545, 57.7416 ).set_point_at( -1630.6364, 2728.0066, 57.8074, 2 );
 
                 AUDIO_PL.play(); // 2
-                darius.start_facial_talk( 7000 );
-                show_text_highpriority( "@BL@81", 7000, 1 );
-                wait( 7000 );
+                darius.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@81", 3000, 1 );
+                wait( 3000 );
                 darius.stop_facial_talk();
 
                 CAMERA.set_position( -1643.3318, 2732.0649, 58.8551 ).set_point_at( -1630.92, 2723.8879, 57.7919, 2 );
 
                 AUDIO_PL.play(); // 3
-                marcy.start_facial_talk( 8000 );
-                show_text_highpriority( "@BL@82", 8000, 1 );
-                wait( 8000 );
+                marcy.start_facial_talk( 6000 );
+                show_text_highpriority( "@BL@82", 6000, 1 );
+                wait( 6000 );
                 marcy.stop_facial_talk();
 
                 AUDIO_PL.play(); // 4
-                john.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@83", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 5000 );
+                show_text_highpriority( "@BL@83", 5000, 1 );
+                wait( 5000 );
                 john.stop_facial_talk();
 
             };
@@ -4125,51 +4124,51 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play( 5 ); // 5
-                john.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@84", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 3000 );
+                show_text_highpriority( "@BL@84", 3000, 1 );
+                wait( 3000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 6
-                player.start_facial_talk( 2000 ).task.perform_animation( "CAR_Sc2_FL", "CAR_CHAT", 4.0, 0, 0, 0, 1, 5000 );
-                show_text_highpriority( "@BL@85", 2000, 1 );
-                wait( 2000 );
+                player.start_facial_talk( 1500 ).task.perform_animation( "CAR_Sc2_FL", "CAR_CHAT", 4.0, 0, 0, 0, 1, 5000 );
+                show_text_highpriority( "@BL@85", 1500, 1 );
+                wait( 1500 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 7
-                john.start_facial_talk( 6000 );
-                show_text_highpriority( "@BL@86", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@86", 4000, 1 );
+                wait( 4000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 8
-                player.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@87", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 2000 );
+                show_text_highpriority( "@BL@87", 2000, 1 );
+                wait( 2000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 9
-                marcy.start_facial_talk( 5000 ).task.perform_animation( "CAR_Sc1_FL", "CAR_CHAT", 4.0, 0, 0, 0, 0, 5000 );
-                show_text_highpriority( "@BL@88", 5000, 1 );
-                wait( 5000 );
+                marcy.start_facial_talk( 4000 ).task.perform_animation( "CAR_Sc1_FL", "CAR_CHAT", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@BL@88", 4000, 1 );
+                wait( 4000 );
                 marcy.stop_facial_talk().task.perform_animation( "CAR_Sc1_FR", "CAR_CHAT", 4.0, 1, 0, 0, 0, -1 );
 
                 AUDIO_PL.play(); // 10
-                player.start_facial_talk( 5000 );
-                show_text_highpriority( "@BL@89", 5000, 1 );
-                wait( 5000 );
+                player.start_facial_talk( 4000 );
+                show_text_highpriority( "@BL@89", 4000, 1 );
+                wait( 4000 );
                 player.stop_facial_talk();
 
                 AUDIO_PL.play(); // 11
-                john.start_facial_talk( 6000 ).task.perform_animation( "CAR_Sc1_BL", "CAR_CHAT", 4.0, 0, 0, 0, 0, 11000 );
-                show_text_highpriority( "@BL@90", 6000, 1 );
-                wait( 6000 );
+                john.start_facial_talk( 5000 ).task.perform_animation( "CAR_Sc1_BL", "CAR_CHAT", 4.0, 0, 0, 0, 0, 8000 );
+                show_text_highpriority( "@BL@90", 5000, 1 );
+                wait( 5000 );
                 john.stop_facial_talk();
 
                 AUDIO_PL.play(); // 12
-                player.start_facial_talk( 2000 );
-                show_text_highpriority( "@BL@91", 2000, 1 );
-                wait( 2000 );
+                player.start_facial_talk( 1500 );
+                show_text_highpriority( "@BL@91", 1500, 1 );
+                wait( 1500 );
                 player.stop_facial_talk();
 
             };

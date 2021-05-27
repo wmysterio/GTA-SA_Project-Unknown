@@ -5,11 +5,12 @@ public partial class MAIN {
 
     static RadarMarker SHOP_IN_COUNTRISIDE_MARKER;
     static Pickup SHOP_IN_COUNTRISIDE_PICKUP;
+    static AssetMoneyPickup SHOP_ASSET_MONEY;
 
     public class UNLOCK1 : Thread {
 
-        public const double X = 254.6288, Y = -65.008, Z = 1.3281;
-        const int PRICE = 160000;
+        public const double X = -49.6826, Y = -270.8765, Z = 6.6332;
+        const int PRICE = 150000;
 
         public override void START( LabelJump label ) {
             SHOP_IN_COUNTRISIDE_MARKER.disable();
@@ -32,7 +33,7 @@ public partial class MAIN {
             __fade( false, true );
             __toggle_cinematic( true );
             __renderer_at( 241.3808, -73.9149, 6.2957 );
-            CAMERA.set_position( 241.3808, -73.9149, 6.2957 ).set_point_at( 250.1326, -64.3964, 2.6312, 2 );
+            CAMERA.set_position( -7.6129, -352.3026, 38.7814 ).set_point_at( -87.001, -273.9595, 28.3829, 2 );
             __clear_text();
             wait( 1000 );
             __fade( true, true );

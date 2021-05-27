@@ -8,7 +8,7 @@ public partial class MAIN {
     // ---------------------------------------------------------------------------------------------------------------------------
 
     static Timer MISSION_GLOBAL_TIMER_1;
-    static StatusText MISSION_GLOBAL_STATUS_TEXT_1, MISSION_GLOBAL_STATUS_TEXT_2;
+    static StatusText MISSION_GLOBAL_STATUS_TEXT_1, MISSION_GLOBAL_STATUS_TEXT_2, MISSION_GLOBAL_STATUS_TEXT_3;
     static sString CURRENT_MISSION_NAME;
 
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -37,38 +37,13 @@ public partial class MAIN {
 
         private void BASE_GAME_SETUP( LabelGosub label ) {
 
-            #region CJ & CV BASE SETUP
-            CJ_START_X.value = 2498.9802;
-            CJ_START_Y.value = -1685.6517;
-            CJ_START_Z.value = 13.4478;
-            CJ_TOTAL_MISSION_PASSED.value = 0;
-            #endregion
-
             #region C.R.A.S.H. BASE SETUP
             CRASH_START_X.value = 1546.9318;
             CRASH_START_Y.value = -1681.6016;
             CRASH_START_Z.value = 13.5588;
+            CRASH_ICON.value = RadarIconID.CRASH;
             CRASH_TOTAL_MISSION_PASSED.value = 0;
             #endregion
-
-            #region REMAX BASE SETUP
-            REMAX_START_X.value = 259.2836;
-            REMAX_START_Y.value = -272.1956;
-            REMAX_START_Z.value = 1.5836;
-            REMAX_TOTAL_MISSION_PASSED.value = 0;
-            #endregion
-
-
-            // DEBUG START            
-            /*
-            */
-            CRASH_START_X.value = 2370.6443;
-            CRASH_START_Y.value = 2547.9795;
-            CRASH_START_Z.value = 10.8203;
-            CRASH_TOTAL_MISSION_PASSED.value = 5;
-            create_thread<CRSTART>();
-            // DEBUG END
-
 
             #region BLACK LIST BASE SETUP
             BLACK_LIST_START_X.value = 1812.5254;
@@ -78,6 +53,31 @@ public partial class MAIN {
             BLACK_LIST_MISSION_STAGE.value = 0; // 4095; 1023; 255; 63; 15; 7;
             BLACK_LIST_MISSION_NAME.value = "@BLS@0";
             #endregion
+
+            #region REMAX BASE SETUP
+            REMAX_START_X.value = 259.2836;
+            REMAX_START_Y.value = -272.1956;
+            REMAX_START_Z.value = 1.5836;
+            REMAX_TOTAL_MISSION_PASSED.value = 0;
+            //SHOP_ASSET_MONEY.create( X, Y, Z, 5000, 5000 );
+            #endregion
+
+
+
+
+            #region CJ & CV BASE SETUP
+            CJ_START_X.value = 2498.9802;
+            CJ_START_Y.value = -1685.6517;
+            CJ_START_Z.value = 13.4478;
+            CJ_TOTAL_MISSION_PASSED.value = 0;
+            #endregion
+
+
+            // DEBUG START      
+            CRASH_TOTAL_MISSION_PASSED.value = 2;
+            create_thread<CRSTART>();
+            // DEBUG END
+
 
             #region CAR PARK
             CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, 2488.1101, -1683.4895, 12.9456, 89.0883, FBITRUCK, "VITAL", forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
@@ -98,17 +98,17 @@ public partial class MAIN {
             | MISSION | PROGRESS | RESPECT |
             |------------------------------|
             | CJMISS  | +16      | +10     |
-            | CRASH   | +9       | +0      |
+            | CRASH   | +8       | +0      |
             | REMAX   | +15      | +0      |
             | INCORP  | +10      | +0      |
             | MAFIA   | +7       | +0      |
             | ZERO    | +4       | +0      |
             | BLIST   | +2       | +0      |
             |------------------------------|
-            | TOTAL   | +63      | +10     |
+            | TOTAL   | +62      | +10     |
             \*----------------------------*/
 
-            set_max_progress( 63 );
+            set_max_progress( 62 );
             set_total_respect_points( 1000 + 10 );
             #endregion
 

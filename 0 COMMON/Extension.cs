@@ -18,6 +18,15 @@ static class Extension {
             }, delegate { hVehicle.destroy(); } );
         } );
     }
+    public static void destroy_if_exist( this Train hTrain ) {
+        var hVehicle = ( Car ) hTrain;
+        and( hVehicle.is_defined(), delegate {
+            hTrain.remove_references();
+            and( PlayerActor.is_in_vehicle( hVehicle ), delegate {
+                hVehicle.set_immunities( false );
+            }, delegate { hTrain.destroy(); } );
+        } );
+    }
     public static void extinguish<T>( this Vehicle<T> hVehicle ) where T : Vehicle<T> {
         and( hVehicle.is_burning(), delegate {
             hVehicle.set_health( 300 );

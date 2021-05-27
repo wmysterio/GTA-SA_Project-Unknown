@@ -3,7 +3,7 @@
 public partial class MAIN {
 
     static Float CRASH_START_X, CRASH_START_Y, CRASH_START_Z;
-    static Int CRASH_TOTAL_MISSION_PASSED, CRASH_FBI_FLAG;
+    static Int CRASH_TOTAL_MISSION_PASSED, CRASH_FBI_FLAG, CRASH_ICON;
 
     public class CRSTART : Thread {
 
@@ -14,7 +14,7 @@ public partial class MAIN {
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
-            hMarker.create_long_range( RadarIconID.CRASH, CRASH_START_X, CRASH_START_Y, CRASH_START_Z ).set_radar_mode( 2 ); 
+            hMarker.create_long_range( CRASH_ICON, CRASH_START_X, CRASH_START_Y, CRASH_START_Z ).set_radar_mode( 2 ); 
             Jump += LOOP;
         }
 
@@ -60,7 +60,7 @@ public partial class MAIN {
         }
 
         private void SETUP_MISSION_NAMES( LabelGosub label ) {
-            sString[] names = { "@CRS@00", "@CRS@01", "@CRS@02", "@CRS@03", "@CRS@04", "@CRS@05", "@CRS@06", "@CRS@07", "@CRS@08" };
+            sString[] names = { "@CRS@00", "@CRS@01", "@CRS@02", "@CRS@03", "@CRS@04", "@CRS@05", "@CRS@06", "@CRS@07" };
             for( int i = 0; i < names.Length; i++ ) {
                 and( CRASH_TOTAL_MISSION_PASSED == i, delegate {
                     CURRENT_MISSION_NAME.value = names[ i ];
