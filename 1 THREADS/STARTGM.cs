@@ -3,7 +3,7 @@
 public partial class MAIN {
 
     public const bool IS_DEBUG = true;
-    public const bool DISABLE_RELEASE_CHEATS = false;
+    public const bool DISABLE_CHEATS = false;
 
     // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -27,11 +27,6 @@ public partial class MAIN {
             create_thread<CJPHONE>();
             Gosub += BASE_GAME_SETUP;
             create_thread<CJSTART>();
-            __camera_default();
-            wait( 1000 );
-            fade( 1, 1000 );
-            wait( 100 );
-            __clear_text();
             end_thread();
         }
 

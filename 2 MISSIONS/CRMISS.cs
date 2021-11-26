@@ -495,7 +495,9 @@ public partial class MAIN {
             Gosub += SCENE_3C;
             __disable_player_controll_in_cutscene( false );
             __clear_text();
-            MISSION_GLOBAL_TIMER_1.value = 13000; // 13 * 1000
+            MISSION_GLOBAL_TIMER_1.value = 16000; // 16 * 1000
+            and( CURRENT_GAME_LEVEL == 1, delegate { MISSION_GLOBAL_TIMER_1.value = 14000; } );
+            and( CURRENT_GAME_LEVEL == 2, delegate { MISSION_GLOBAL_TIMER_1.value = 10000; } );
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
             wait( 1000 );
             __camera_default();
@@ -578,16 +580,17 @@ public partial class MAIN {
             enemyActors[ 0 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 0 ] );
             enemyActors[ 1 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 1 ] );
             enemyActors[ 2 ].create_in_vehicle_driverseat( ActorType.MISSION1, LAPDM1, boats[ 2 ] );
-            temp1.random( 0, 3 );
+            temp1.value = 0;
+            and( CURRENT_GAME_LEVEL > 0, delegate { temp1.random( 0, 3 ); } );
             boats[ temp1 ].get_driver( tempActor );
             tempActor.store_coords( tempX1, tempY1, tempZ1, 0.0, -0.35, 0.0 );
             tempZ1 += 0.02;
             enemyActors[ 3 ].create( ActorType.MISSION1, WMYPLT, tempX1, tempY1, tempZ1 )
                             .set_health( 10 )
                             .task.crouch( true );
-            // DEBUG START
-            //enemyMarkers[ 3 ].create_above_actor( enemyActors[ 3 ] ).set_size( 1 );
-            // DEBUG END
+            and( 2 > CURRENT_GAME_LEVEL, delegate { 
+                enemyMarkers[ 3 ].create_above_actor( enemyActors[ 3 ] ).set_size( 1 );
+            } );
             destroy_model( usedModels );
             to( index, 0, 2, h => {
                 boats[ index ].set_to_normal_driver();
@@ -760,19 +763,27 @@ public partial class MAIN {
             wait( 500 );
             __fade( true, true );
 
-            AUDIO_PL.play( 18 ); // 18
-            mel.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-            show_text_highpriority( "@CR@027", 4000, 1 );
-            wait( 4000 );
-            mel.stop_facial_talk();
+            //p.set_clothes( "POLICETR", "POLICETR", ClothesBodyPart.SPECIAL ).rebuild();
+            and( p.is_wearing_skin( "POLICETR", ClothesBodyPart.SPECIAL ), delegate {
+                MISSION_GLOBAL_STATUS_TEXT_1 += 10;
+                M5_PANEL_INDEX_OF_QUESTION += 1;
+            }, delegate {
 
-            Gosub += M5_QUESTION_1;
+                AUDIO_PL.play( 18 ); // 18
+                mel.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
+                show_text_highpriority( "@CR@027", 4000, 1 );
+                wait( 4000 );
+                mel.stop_facial_talk();
 
-            AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 0, 1, 2, 3 ]
-            player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
-            show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
-            wait( 4500 );
-            player.stop_facial_talk();
+                Gosub += M5_QUESTION_1;
+
+                AUDIO_PL.play( M5_PANEL_CJ_ANSWER_SOUND_ID ); // [ 0, 1, 2, 3 ]
+                player.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+                show_text_1string_highpriority( "@CR@032", tempHash, 4500, 1 );
+                wait( 4500 );
+                player.stop_facial_talk();
+
+            } );
 
             AUDIO_PL.play( 19 ); // 19
             mel.start_facial_talk( 3500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 3500 );
@@ -835,7 +846,10 @@ public partial class MAIN {
             wait( AUDIO_PL.is_stopped );
             temp1.value = MISSION_GLOBAL_STATUS_TEXT_1;
             Gosub += CLEAR_ACTIVE_ENTITIES;
-            and( 80 > temp1, delegate {
+            temp2.value = 70;
+            and( CURRENT_GAME_LEVEL == 1, delegate { temp2.value = 75; } );
+            and( CURRENT_GAME_LEVEL == 2, delegate { temp2.value = 80; } );
+            and( temp2 > temp1, delegate {
                 wait( 1000 );
                 __camera_default();
                 __fade( true );
@@ -1469,9 +1483,14 @@ public partial class MAIN {
                             .task.stay_put( true );
 
             terroristsActors[ 0 ].create( ActorType.MISSION2, WMYCR, 2787.5935, 884.882, 9.7578 )
-                                 .set_z_angle( 353.8708 )
-                                 .give_weapon( WeaponNumber.SHOTGUN, 9999 )
-                                 .set_armed_weapon( WeaponNumber.SHOTGUN );
+                                 .set_z_angle( 353.8708 );
+            and( CURRENT_GAME_LEVEL > 0, delegate {
+                terroristsActors[ 0 ].give_weapon( WeaponNumber.SHOTGUN, 9999 )
+                                     .set_armed_weapon( WeaponNumber.SHOTGUN );
+            }, delegate {
+                terroristsActors[ 0 ].give_weapon( WeaponNumber.TEC9, 9999 )
+                                     .set_armed_weapon( WeaponNumber.TEC9 );
+            } );
 
             terroristsActors[ 1 ].create( ActorType.MISSION2, DNMYLC, 2794.2998, 844.486, 9.75 )
                                  .set_z_angle( 14.5509 )
@@ -1498,9 +1517,15 @@ public partial class MAIN {
                                  .task.stay_put( true );
 
             terroristsActors[ 4 ].create( ActorType.MISSION2, BMYPOL2, 2870.0371, 902.1294, 9.75 )
-                                 .set_z_angle( 64.0112 )
-                                 .give_weapon( WeaponNumber.SHOTGUN, 9999 )
-                                 .set_armed_weapon( WeaponNumber.SHOTGUN );
+                                 .set_z_angle( 64.0112 );
+            and( CURRENT_GAME_LEVEL == 2, delegate {
+                terroristsActors[ 4 ].give_weapon( WeaponNumber.SHOTGUN, 9999 )
+                                     .set_armed_weapon( WeaponNumber.SHOTGUN );
+            }, delegate {
+                terroristsActors[ 4 ].give_weapon( WeaponNumber.TEC9, 9999 )
+                                     .set_armed_weapon( WeaponNumber.TEC9 );
+            } );
+
 
             terroristsActors[ 5 ].create( ActorType.MISSION2, SWMYHP2, 2879.1431, 948.0914, 17.0337 )
                                  .set_z_angle( 147.0453 )
@@ -1572,7 +1597,9 @@ public partial class MAIN {
             MISSION_GLOBAL_STATUS_TEXT_2.create( StatusTextType.NUMBER, 2, "@CRS@45" );
             MISSION_GLOBAL_STATUS_TEXT_3.value = 3;
             MISSION_GLOBAL_STATUS_TEXT_3.create( StatusTextType.NUMBER, 3, "@CRS@47" );
-            MISSION_GLOBAL_TIMER_1.value = 300000; // 5 * 60 * 1000
+            and( CURRENT_GAME_LEVEL == 0, delegate { MISSION_GLOBAL_TIMER_1.value = 360000; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { MISSION_GLOBAL_TIMER_1.value = 330000; } );
+            and( CURRENT_GAME_LEVEL == 2, delegate { MISSION_GLOBAL_TIMER_1.value = 300000; } ); // 5 * 60 * 1000
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
             Jump += M6_KILL_ALL_TERRORISTS_AND_DISARM_BOMBS;
         }
@@ -1754,23 +1781,43 @@ public partial class MAIN {
                      .set_acquaintance( AcquaintanceType.HATE, ActorType.PLAYER )
                      .set_acquaintance( AcquaintanceType.HATE, ActorType.MISSION1 )
                      .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION2 );
-                temp1.random( 250, 400 );
+
+                and( CURRENT_GAME_LEVEL == 0, delegate { temp1.value = 200; } );
+                and( CURRENT_GAME_LEVEL == 1, delegate { temp1.value = 250; } );
+                and( CURRENT_GAME_LEVEL == 2, delegate { temp1.random( 250, 400 ); } );
                 actor.set_max_health( temp1 )
                      .set_health( temp1 );
-                temp1.random( 0, 101 );
+
+                and( CURRENT_GAME_LEVEL == 0, delegate { temp1.value = 0; } );
+                and( CURRENT_GAME_LEVEL == 1, delegate { temp1.random( 0, 101 ); } );
+                and( CURRENT_GAME_LEVEL == 2, delegate { temp1.value = 100; } );
                 and( temp1 > 35, delegate {
                     actor.set_drops_weapons_when_dead( false )
                          .set_death_weapons_persist( false );
                 } );
-                temp1.random( 35, 65 );
+
+                and( CURRENT_GAME_LEVEL == 0, delegate { temp1.random( 30, 35 ); } );
+                and( CURRENT_GAME_LEVEL == 1, delegate { temp1.random( 40, 55 ); } );
+                and( CURRENT_GAME_LEVEL == 2, delegate { temp1.random( 50, 75 ); } );
                 actor.set_weapon_accuracy( temp1 );
-                temp1.random( 30, 60 );
+
+                and( CURRENT_GAME_LEVEL == 0, delegate { temp1.random( 30, 35 ); } );
+                and( CURRENT_GAME_LEVEL == 1, delegate { temp1.random( 35, 40 ); } );
+                and( CURRENT_GAME_LEVEL == 2, delegate { temp1.random( 45, 65 ); } );
                 actor.set_weapon_attack_rate( temp1 )
                      .set_decision_maker( enemyDecisionMaker )
                      .task.set_ignore_weapon_range( true );
             } );
-            terroristsActors[ 1 ].set_weapon_accuracy( 40 )
-                                 .set_weapon_attack_rate( 55 );
+            terroristsActors[ 1 ].set_weapon_accuracy( 80 );
+            and( CURRENT_GAME_LEVEL == 0, delegate {
+                terroristsActors[ 1 ].set_weapon_attack_rate( 50 );
+            } );
+            and( CURRENT_GAME_LEVEL == 1, delegate {
+                terroristsActors[ 1 ].set_weapon_attack_rate( 60 );
+            } );
+            and( CURRENT_GAME_LEVEL == 2, delegate {
+                terroristsActors[ 1 ].set_weapon_attack_rate( 80 );
+            } );
         }
         private void update_status_text_normalized() {
             friendActors[ 0 ].get_health( temp1 );
@@ -2290,17 +2337,153 @@ public partial class MAIN {
         }
 
         private void SCENE_2B( LabelGosub label ) {
-            //
+
+            var player = cutcsene_actors[ 0 ];
+            var john = cutcsene_actors[ 1 ];
+
             __toggle_cinematic( true );
             wait( 1000 );
-            //clear_area( 1, 1177.72, -1852.2987, 12.3984, 300.0 );
+            clear_area( false, 1601.594, -1693.4211, 19.8792, 300.0 );
+            a.set_position( 1601.594, -1693.4211, 19.8792 );
+            __renderer_at( 1601.594, -1693.4211, 19.8792 );
+            load_special_actor( "COPJOHN", 1 );
+            load_model( COLT45 );
+            load_requested_models();
+            chdir( @"Sound\CRMISS\2B" );
+            AUDIO_PL.load( 15 );
+            wait( is_special_actor_loaded( 1 ), AUDIO_PL.is_ready );
+            player.create( ActorType.MISSION1, NULL, 1608.3788, -1720.5688, 13.5469 ).set_z_angle( 0.0 )
+                  .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 );
+            john.create( ActorType.MISSION1, SPECIAL01, 1612.0122, -1713.4042, 12.5469 ).set_z_angle( 66.3572 )
+                .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 ).give_weapon( WeaponNumber.PISTOL, 30 )
+                .set_armed_weapon( WeaponNumber.PISTOL )
+                .task.look_at_actor( player, -1 );
+            unload_special_actor( 1 );
+            destroy_model( COLT45 );
+            wait( 1000 );
+            CAMERA.set_position( 1614.7737, -1727.1735, 13.5469 );
+            CAMERA.set_point_at( 1608.3788, -1720.5688, 13.5469, 2 );
+            wait( 1000 );
+            player.task.walk_to_point( 1607.2255, -1712.7178, 13.5469, 358.9899, 1.0 );
             __fade( true, false );
             Scene += delegate {
+                wait( 500 );
+
+                AUDIO_PL.play(); // 0
+                player.start_facial_talk( 3000 );
+                show_text_highpriority( "@CR@102", 3000, 1 );
+                wait( 3000 );
+                player.stop_facial_talk();
+
+                wait( !player.is_near_point_3d( false, 1607.2255, -1712.7178, 13.5469, 1.1, 1.1, 1.1 ) );
+
+                CAMERA.set_position( 1619.925, -1700.184, 18.1202 );
+                CAMERA.set_point_at( 1609.8018, -1712.8969, 13.5469, 2 );
+                CAMERA.transverse_position( 1619.925, -1700.184, 18.1202, 1610.2582, -1704.418, 13.5469, 20100, TransitionType.SMOOT )
+                      .transverse_point( 1609.8018, -1712.8969, 13.5469, 1608.9163, -1711.9015, 13.5469, 20100, TransitionType.SMOOT );
+
+                AUDIO_PL.play(); // 1
+                john.start_facial_talk( 5000 ).task.aim_at_actor( player, -2 );
+                show_text_highpriority( "@CR@103", 5000, 1 );
+                wait( 2000 );
+                player.clear_tasks().task.turn_to_point( 1612.0122, -1713.4042, 12.5469 );
+                wait( 3000 );
+                john.stop_facial_talk();
+                player.task.look_at_actor( john, -1 ).hands_up( -1 );
+
+                AUDIO_PL.play(); // 2
+                player.start_facial_talk( 5000 );
+                show_text_highpriority( "@CR@104", 5000, 1 );
                 wait( 5000 );
-                Comment = "...";
+                player.stop_facial_talk();
+                john.clear_tasks().task.stay_put( true );
+
+                AUDIO_PL.play(); // 3
+                john.start_facial_talk( 5000 );
+                show_text_highpriority( "@CR@105", 5000, 1 );
+                wait( 2000 );
+                player.clear_tasks().task.rotate_to_actor( john );
+                wait( 3000 );
+                john.stop_facial_talk();
+
+                AUDIO_PL.play(); // 4
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@106", 5000, 1 );
+                wait( 5000 );
+                player.stop_facial_talk();
+
+                CAMERA.transverse_position( 1610.2582, -1704.418, 13.5469, 1610.2582, -1704.418, 13.5469, 0, TransitionType.NOW )
+                      .transverse_point( 1608.9163, -1711.9015, 13.5469, 1608.9163, -1711.9015, 13.5469, 0, TransitionType.NOW );
+                CAMERA.set_position( 1610.2582, -1704.418, 13.5469 );
+                CAMERA.set_point_at( 1608.9163, -1711.9015, 13.5469, 2 );
+
+                AUDIO_PL.play(); // 5
+                john.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@107", 5000, 1 );
+                player.task.walk_to_point( 1608.717, -1712.4122, 13.5469, 268.4872, 0.25 );
+                wait( 2000 );
+                player.clear_tasks();
+                wait( 3000 );
+                john.stop_facial_talk();
+
+                AUDIO_PL.play(); // 6
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@108", 5000, 1 );
+                wait( 5000 );
+                player.stop_facial_talk().task.rotate_to_actor( john );
+                john.task.rotate_to_actor( player );
+
+                AUDIO_PL.play(); // 7
+                john.start_facial_talk( 20000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 20000 );
+                show_text_highpriority( "@CR@109", 5000, 1 );
+                wait( 5000 );
+
+                CAMERA.set_position( 1605.116, -1711.3657, 14.5469 );
+                CAMERA.set_point_at( 1612.0122, -1713.4042, 12.5469, 1 );
+
+                AUDIO_PL.play(); // 8
+                show_text_highpriority( "@CR@110", 5000, 1 );
+                wait( 5000 );
+                AUDIO_PL.play(); // 9
+                show_text_highpriority( "@CR@111", 5000, 1 );
+                wait( 5000 );
+                AUDIO_PL.play(); // 10
+                show_text_highpriority( "@CR@112", 5000, 1 );
+                wait( 5000 );
+                john.stop_facial_talk();
+
+                AUDIO_PL.play(); // 11
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@113", 5000, 1 );
+                wait( 5000 );
+                player.stop_facial_talk();
+
+                CAMERA.set_position( 1604.916 , -1714.9479, 13.5469 );
+                CAMERA.set_point_at( 1610.1688, -1713.3136, 13.5469, 2 );
+
+                AUDIO_PL.play(); // 12
+                john.start_facial_talk( 10000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 10000 );
+                show_text_highpriority( "@CR@114", 5000, 1 );
+                wait( 5000 );
+                AUDIO_PL.play(); // 13
+                show_text_highpriority( "@CR@115", 5000, 1 );
+                wait( 5000 );
+                john.stop_facial_talk();
+
+                AUDIO_PL.play(); // 14
+                player.start_facial_talk( 5000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 5000 );
+                show_text_highpriority( "@CR@116", 5000, 1 );
+                wait( 5000 );
+                player.stop_facial_talk();
+
+                wait( 500 );
             };
             __fade( false, true );
+            CAMERA.transverse_position( 1610.2582, -1704.418, 13.5469, 1610.2582, -1704.418, 13.5469, 0, TransitionType.NOW )
+                  .transverse_point( 1608.9163, -1711.9015, 13.5469, 1608.9163, -1711.9015, 13.5469, 0, TransitionType.NOW );
             __toggle_cinematic( false );
+            AUDIO_PL.unload();
+            wait( AUDIO_PL.is_stopped );
             Gosub += CLEAR_CUTSCENE_ENTITIES;
         }
 
@@ -2588,9 +2771,9 @@ public partial class MAIN {
                 wait( 500 );
 
                 AUDIO_PL.play(); // 0
-                mel.start_facial_talk( 4000 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4000 );
-                show_text_highpriority( "@CR@064", 4000, 1 );
-                wait( 4000 );
+                mel.start_facial_talk( 4500 ).task.perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 4500 );
+                show_text_highpriority( "@CR@064", 4500, 1 );
+                wait( 4500 );
                 mel.stop_facial_talk();
 
                 AUDIO_PL.play(); // 1

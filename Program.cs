@@ -4,7 +4,7 @@ using System.Linq;
 using GTA.Core;
 
 namespace demo_app_v7 {
-
+    
     class Program {
 
         static void Main( string[] args ) {
@@ -13,7 +13,7 @@ namespace demo_app_v7 {
             Generator.SetFXTFolder( @"D:\Programm\GTA_SA\modloader\wmysterio\CLEO\CLEO_TEXT" );
             Generator.SetMainSCMFolder( @"D:\Programm\GTA_SA\modloader\wmysterio\data\script" );
             //Generator.SetGTAFolder( @"D:\Programm\GTA_SA" );
-            Generator.SetSannyBuidlerFolder( @"D:\Programm\Sanny Builder 3" );
+            Generator.SetSannyBuidlerFolder( @"D:\Programm\Sanny Builder 3.5.2" );
 
             //Generator.Start<MAIN>( true );
             Generator.Compile<MAIN>( true );
