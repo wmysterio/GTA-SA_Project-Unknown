@@ -27,6 +27,17 @@ public partial class MAIN {
             create_thread<CJPHONE>();
             Gosub += BASE_GAME_SETUP;
             create_thread<CJSTART>();
+            wait( 0 );
+            Gosub += MAIN_CUTSCENE;
+            if( IS_DEBUG ) {
+                CURRENT_GAME_LEVEL.value = 0;
+                and( CURRENT_GAME_LEVEL == 1, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 800.0 ); } );
+                and( CURRENT_GAME_LEVEL == 2, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 1000.0 ); } );
+            } else { 
+              create_thread<SELECTG>();
+              wait( IS_CURRENT_GAME_SELECTED == false );
+            }
+            __disable_player_controll_in_cutscene( false );
             end_thread();
         }
 
@@ -49,16 +60,21 @@ public partial class MAIN {
             BLACK_LIST_MISSION_NAME.value = "@BLS@0";
             #endregion
 
+            #region ZERO BASE SETUP
+            ZERO_START_X.value = -2245.2568;
+            ZERO_START_Y.value = 132.2962;
+            ZERO_START_Z.value = 34.3203;
+            ZERO_TOTAL_MISSION_PASSED.value = 0;
+            //STRIP_IN_LV_ASSET_MONEY.create( UNLOCK2.X, UNLOCK2.Y, UNLOCK2.Z, 5000, 5000 );
+            #endregion
+
             #region REMAX BASE SETUP
             REMAX_START_X.value = 259.2836;
             REMAX_START_Y.value = -272.1956;
             REMAX_START_Z.value = 1.5836;
             REMAX_TOTAL_MISSION_PASSED.value = 0;
-            //SHOP_ASSET_MONEY.create( X, Y, Z, 5000, 5000 );
+            //SHOP_ASSET_MONEY.create( UNLOCK1.X, UNLOCK1.Y, UNLOCK1.Z, 5000, 5000 );
             #endregion
-
-
-
 
             #region CJ & CV BASE SETUP
             CJ_START_X.value = 2498.9802;
@@ -68,9 +84,9 @@ public partial class MAIN {
             #endregion
 
 
-            // DEBUG START      
-            CRASH_TOTAL_MISSION_PASSED.value = 2;
-            create_thread<CRSTART>();
+            // DEBUG START     
+            ZERO_TOTAL_MISSION_PASSED.value = 0;
+            create_thread<ZRSTART>();
             // DEBUG END
 
 
@@ -81,6 +97,8 @@ public partial class MAIN {
             #region PROPERTIES            
             SHOP_IN_COUNTRISIDE_MARKER.create_short_range( RadarIconID.PROPERTY_RED, UNLOCK1.X, UNLOCK1.Y, UNLOCK1.Z ).set_radar_mode( 2 );
             SHOP_IN_COUNTRISIDE_PICKUP.create_locked_property( sString.LOCKED_PROPERTY, UNLOCK1.X, UNLOCK1.Y, UNLOCK1.Z );
+            STRIP_IN_LV_MARKER.create_short_range( RadarIconID.PROPERTY_RED, UNLOCK2.X, UNLOCK2.Y, UNLOCK2.Z ).set_radar_mode( 2 );
+            STRIP_IN_LV_PICKUP.create_locked_property( sString.LOCKED_PROPERTY, UNLOCK2.X, UNLOCK2.Y, UNLOCK2.Z );
             #endregion
 
             #region OBJECTS
@@ -97,16 +115,49 @@ public partial class MAIN {
             | REMAX   | +15      | +0      |
             | INCORP  | +10      | +0      |
             | MAFIA   | +7       | +0      |
-            | ZERO    | +4       | +0      |
+            | ZERO    | +5       | +0      |
             | BLIST   | +2       | +0      |
             |------------------------------|
-            | TOTAL   | +62      | +10     |
+            | TOTAL   | +63      | +10     |
             \*----------------------------*/
 
-            set_max_progress( 62 );
+            set_max_progress( 63 );
             set_total_respect_points( 1000 + 10 );
             #endregion
 
+        }
+
+        private void MAIN_CUTSCENE( LabelGosub label ) {
+            wait( 1000 );
+            __clear_text();
+            __disable_player_controll_in_cutscene( true );
+            __set_player_ignore( true );
+            __toggle_cinematic( true );
+
+            clear_area( false, 2471.8965, -1685.6204, 13.5078, 300.0 );
+            a.set_position( 2471.8965, -1685.6204, 13.5078 );
+
+            // load and create entities
+
+            wait( 1000 );
+            __fade( true, false );
+            Scene += delegate {
+                wait( 5000 );
+
+            };
+            __fade( false, true );
+
+            // destroy all entities
+
+            clear_area( false, 2488.562, -1666.865, 12.8757, 300.0 );
+            __renderer_at( 2488.562, -1666.865, 12.8757 );
+            a.set_position( 2488.562, -1666.865, 12.8757 );
+            __camera_default();
+            __toggle_cinematic( false );
+            __set_player_ignore( false );
+            wait( 1000 );
+            fade( 1, 500 );
+            __set_entered_names( true );
         }
 
     }

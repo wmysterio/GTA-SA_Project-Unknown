@@ -38,7 +38,7 @@ public partial class MAIN {
             wait( 1000 );
             __fade( true, true );
             play_music( MusicID.PROPERTY_BUYED );
-            show_text_styled( "BUYPRO", 5000, 2 );
+            show_text_styled( "BUYPRO", 1000, 2 );
             wait( 6000 );
             __fade( false, true );
             __camera_default();

@@ -12,7 +12,6 @@ public partial class MAIN {
     public class SELECTG : Thread {
 
         Panel levelSelectorPanel;
-        Float temp;
 
         public override void START( LabelJump label ) {
             wait( DefaultWaitTime );
@@ -39,11 +38,6 @@ public partial class MAIN {
                 levelSelectorPanel.get_active_row( CURRENT_GAME_LEVEL );
                 show_formatted_text_box( "Selected level: %d", CURRENT_GAME_LEVEL );
                 Gosub += REMOVE_PANEL;
-                if( DISABLE_CHEATS ) {
-                    and( CURRENT_GAME_LEVEL > 0, delegate {
-                        unsafe_code( "0A8C: write_memory 0x0053BFB8 size 4 value 0x90909090 virtual_protect 1\r\n0A8C: write_memory 0x0053BFBC size 1 value 0x90 virtual_protect 1" );
-                    } );
-                }
                 IS_CURRENT_GAME_SELECTED.value = true;
                 end_thread();
             } );

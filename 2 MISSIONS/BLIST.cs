@@ -1,5 +1,4 @@
 ﻿using GTA;
-//using GTA.Plugins;
 
 public partial class MAIN {
 
@@ -72,6 +71,11 @@ public partial class MAIN {
             loaded_path.value = -1;
             is_first_mission.value = false;
             wait( 1500 );
+            and( BLACK_LIST_MISSION_PASSED == 1, IS_BLACK_LIST_TUTORIAL_SHOWED == 0, delegate {
+                Gosub += PLAY_CUTSCENE_TUTORIAL;
+                IS_BLACK_LIST_TUTORIAL_SHOWED.value = 1;
+                wait( 1500 );
+            } );
             jump_table( BLACK_LIST_MISSION_PASSED, table => {
                 table.Auto += ON_UNRANK; // 0
                 table.Auto += ON_RANK_6; // 1
@@ -1935,6 +1939,8 @@ public partial class MAIN {
             race_checkpoint_direction_x.value = race_checkpoint_position_x;
             race_checkpoint_direction_y.value = race_checkpoint_position_y;
             race_checkpoint_direction_z.value = race_checkpoint_position_z;
+            and( 2 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 += 5000; } );
+            and( 1 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 += 5000; } );
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
             show_text_highpriority( "@BLS@33", 6000, 1 );
             Jump += RACE_GENERIC_SPRINT_LOOP;
@@ -1962,6 +1968,8 @@ public partial class MAIN {
             set_sensitivity_to_crime( 1.25 );
             __set_traffic( 1.0 );
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
+            and( 2 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 -= 10000; } );
+            and( 1 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 -= 10000; } );
             show_text_highpriority( "@BLS@32", 6000, 1 );
             Jump += RACE_GENERIC_COPS_LOOP;
         }
@@ -2011,6 +2019,8 @@ public partial class MAIN {
         private void RACE_GENERIC_CHECKPOINT_START( LabelJump label ) {
             Gosub += RACE_GENERIC_RESTORE_PLAYER_CONTROL;
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
+            and( 2 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 += 5000; } );
+            and( 1 > CURRENT_GAME_LEVEL, delegate { MISSION_GLOBAL_TIMER_1 += 5000; } );
             show_text_highpriority( "@BLS@34", 6000, 1 );
             Jump += RACE_GENERIC_CHECKPOINT_LOOP;
         }
@@ -2038,6 +2048,8 @@ public partial class MAIN {
             Gosub += RACE_GENERIC_RESTORE_PLAYER_CONTROL;
             race_total_passed_4point.value = 0;
             MISSION_GLOBAL_STATUS_TEXT_1.value = 0;
+            and( 2 > CURRENT_GAME_LEVEL, delegate { race_need_speed -= 5; } );
+            and( 1 > CURRENT_GAME_LEVEL, delegate { race_need_speed -= 5; } );
             MISSION_GLOBAL_STATUS_TEXT_2.value = race_need_speed;
             MISSION_GLOBAL_STATUS_TEXT_1.create( StatusTextType.NUMBER, 1, "@BLS@35" );
             MISSION_GLOBAL_STATUS_TEXT_2.create( StatusTextType.NUMBER, 2, "@BLS@36" );
@@ -2085,7 +2097,8 @@ public partial class MAIN {
 
         private void RACE_GENERIC_DUEL_START( LabelJump label ) {
             Gosub += RACE_GENERIC_RESTORE_PLAYER_CONTROL;
-            enemy_car.start_path( loaded_path ).set_path_speed( race_path_speed )/*.set_collision_detection( false )*/;
+            enemy_car.start_path( loaded_path ).set_path_speed( race_path_speed );
+            and( 2 > CURRENT_GAME_LEVEL, delegate { enemy_car.set_collision_detection( false ); } );
             enemy_actor.set_cant_be_dragged_out( true );
             enemy_marker.create_above_vehicle( enemy_car ).set_radar_mode( 2 ).set_size( 2 );
             final_point_x.value = checkpoint_x[ race_stopwatch ];
@@ -2254,6 +2267,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.88; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.9; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2322,6 +2337,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.85; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.88; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2391,6 +2408,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.86; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.88; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2459,6 +2478,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.85; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.87; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2527,6 +2548,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.88; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.9; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2614,6 +2637,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.86; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.88; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -2707,6 +2732,8 @@ public partial class MAIN {
             wait( 1500 );
             AUDIO_BG.play();
             __fade( true, true );
+            and( CURRENT_GAME_LEVEL == 0, delegate { race_path_speed.value = 0.88; } );
+            and( CURRENT_GAME_LEVEL == 1, delegate { race_path_speed.value = 0.9; } );
             Gosub += RACE_321_AND_START;
             no_suget_duel.value = false;
             race_checkpoint_type.value = 0;
@@ -4021,7 +4048,6 @@ public partial class MAIN {
             var turismo_car = cutcsene_cars[ 2 ];
             var cop_car1 = cutcsene_cars[ 3 ];
             var cop_car2 = cutcsene_cars[ 4 ];
-            var polmav_car = cutscene_heli;
 
             Int[] usedModels = new Int[] { SWMYCR, OMORI, WFYST, COPCARVG, POLMAV, DSHER, SWAT, MP5LNG, COLT45, INFERNUS, TURISMO };
 
@@ -4033,10 +4059,10 @@ public partial class MAIN {
             load_requested_models( usedModels );
             chdir( @"Sound\BLIST\1A" );
             AUDIO_PL.load( 13 );
-            wait( AUDIO_PL.is_ready, is_special_actor_loaded( 1 ) );
+            wait( AUDIO_PL.is_ready, is_special_actor_loaded( 1 ), is_animation_loaded( "CAR_CHAT" ) );
             infernus_car.create( CarModel.INFERNUS, -1636.8693, 2724.0312, 57.6151 ).set_z_angle( 337.9462 ).set_colors( 1, 0 );
             turismo_car.create( CarModel.TURISMO, -1633.5242, 2731.4536, 57.6345 ).set_z_angle( 241.1749 ).set_colors( 0, 0 );
-            polmav_car.create( HeliModel.POLMAV, -1575.2455, 2572.6021, 90.9396 ).set_z_angle( 9.8093 ).enable_siren( 1 ).set_engine_broken( 1 ).set_blades_full_speed();
+            cutscene_heli.create( HeliModel.POLMAV, -1575.2455, 2572.6021, 90.9396 ).set_z_angle( 9.8093 ).enable_siren( 1 ).set_engine_broken( 1 ).set_blades_full_speed();
             cop_car1.create( CarModel.COPCARVG, -1622.1326, 2725.9338, 57.321 ).set_z_angle( 357.7494 ).enable_siren( 1 );
             cop_car2.create( CarModel.COPCARVG, -1642.6938, 2725.989, 58.0776 ).set_z_angle( 163.401 ).enable_siren( 1 );
             player.create( ActorType.MISSION1, NULL, -1633.5066, 2727.2283, 56.8471 ).set_z_angle( 187.426 );
@@ -4044,8 +4070,8 @@ public partial class MAIN {
             crouch.create( ActorType.MISSION1, OMORI, -1626.8051, 2724.6445, 56.7327 ).set_z_angle( 74.3117 );
             john.create( ActorType.MISSION1, SPECIAL01, -1632.186, 2718.0403, 56.8131 ).set_z_angle( 357.5442 ).give_weapon( WeaponNumber.PISTOL, 30 ).set_armed_weapon( WeaponNumber.PISTOL );
             marcy.create( ActorType.MISSION1, WFYST, -1630.8829, 2717.9321, 56.8119 ).set_z_angle( 336.5506 ).give_weapon( WeaponNumber.PISTOL, 30 ).set_armed_weapon( WeaponNumber.PISTOL );
-            heli_driver.create_in_vehicle_driverseat( ActorType.MISSION1, DSHER, polmav_car );
-            polmav_car.fly_to( -1631.2179, 2702.0288, 74.0, 74.0, 74.0 );
+            heli_driver.create_in_vehicle_driverseat( ActorType.MISSION1, DSHER, cutscene_heli );
+            cutscene_heli.fly_to( -1631.2179, 2702.0288, 74.0, 74.0, 74.0 );
             cop5.create_in_vehicle_driverseat( ActorType.MISSION1, DSHER, cop_car2 );
             cop2.create( ActorType.MISSION1, SWAT, -1624.6439, 2719.0083, 56.662 ).set_z_angle( 171.7592 ).give_weapon( WeaponNumber.MP5, 30 ).set_armed_weapon( WeaponNumber.MP5 );
             cop3.create( ActorType.MISSION1, SWAT, -1627.9687, 2717.3914, 56.8369 ).set_z_angle( 13.5243 ).give_weapon( WeaponNumber.MP5, 30 ).set_armed_weapon( WeaponNumber.MP5 );
@@ -4064,7 +4090,7 @@ public partial class MAIN {
             cop2.task.aim_at_actor( player, 9999999 );
             cop3.task.aim_at_actor( darius, 9999999 );
             cop4.task.aim_at_actor( crouch, 9999999 );
-            CAMERA.attach_to_vehicle_look_at_actor( polmav_car, -2.5, -2.5, 0.0, player, 6.0, 2 );
+            CAMERA.attach_to_vehicle_look_at_actor( cutscene_heli, -2.5, -2.5, 0.0, player, 6.0, 2 );
             wait( 1000 );
             __fade( 1, false );
             Scene += delegate {
@@ -4108,6 +4134,7 @@ public partial class MAIN {
             };
             __fade( 0, true );
             AUDIO_PL.play( -1 );
+            __camera_default(); // fix crash: DO NOT DELETE ENTITIES WITH ATTACHED CAMERA!
             Gosub += CLEAR_CUTSCENE_ENTITYS;
             clear_area( true, 16.6589, -2648.3911, 39.9647, 300.0 );
             __renderer_at( 16.6589, -2648.3911, 39.9647 );
@@ -4181,6 +4208,67 @@ public partial class MAIN {
             wait( AUDIO_PL.is_stopped );
             Gosub += CLEAR_CUTSCENE_ENTITYS;
             __camera_default();
+        }
+
+        private void PLAY_CUTSCENE_TUTORIAL( LabelGosub label ) {
+
+            var marcy = cutcsene_actors[ 0 ];
+
+            __toggle_cinematic( true );
+            clear_area( true, 33.4, -2646.8, 40.7285, 1.0 );
+            __renderer_at( 33.4, -2646.8, 40.7285 );
+            load_requested_models( WFYST );
+            chdir( @"Sound\BLIST\1D" );
+            AUDIO_PL.load( 7 );
+            wait( AUDIO_PL.is_ready );
+            marcy.create( ActorType.MISSION1, WFYST, 33.4, -2646.8, 40.7285 ).set_z_angle( 270.0 );
+            destroy_model( WFYST );
+            wait( 1000 );
+            CAMERA.set_position( 34.5, -2646.8, 41.5285 ).set_point_at( 33.4, -2646.8, 41.2285, 2 );
+            __fade( 1, false );
+            Scene += delegate {
+                wait( 1000 );
+
+                AUDIO_PL.play(); // 0
+                marcy.start_facial_talk( 43000 ).task.look_at_point( 34.5, -2646.8, 41.5285, -1 )
+                                                     .perform_animation( "IDLE_chat", "PED", 4.0, 0, 0, 0, 0, 43000 );
+                show_text_highpriority( "@BL@92", 4000, 1 );
+                wait( 4000 );
+
+                AUDIO_PL.play(); // 1
+                show_text_highpriority( "@BL@93", 6000, 1 );
+                wait( 6000 );
+
+                AUDIO_PL.play(); // 2
+                show_text_highpriority( "@BL@94", 6000, 1 );
+                wait( 6000 );
+
+                AUDIO_PL.play(); // 3
+                show_text_highpriority( "@BL@95", 6000, 1 );
+                wait( 6000 );
+
+                AUDIO_PL.play(); // 4
+                show_text_highpriority( "@BL@96", 5000, 1 );
+                wait( 5000 );
+
+                AUDIO_PL.play(); // 5
+                show_text_highpriority( "@BL@97", 9000, 1 );
+                wait( 9000 );
+
+                AUDIO_PL.play(); // 6
+                show_text_highpriority( "@BL@98", 7000, 1 );
+                wait( 7000 );
+                marcy.stop_facial_talk();
+
+                wait( 500 );
+            };
+            __fade( 0, true );
+            __toggle_cinematic( false );
+            AUDIO_PL.unload();
+            wait( AUDIO_PL.is_stopped );
+            Gosub += CLEAR_CUTSCENE_ENTITYS;
+            __camera_default();
+            wait( 1000 );
         }
 
         #endregion
