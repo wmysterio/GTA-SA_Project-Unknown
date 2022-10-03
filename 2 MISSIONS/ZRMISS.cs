@@ -1,5 +1,7 @@
 ﻿using GTA;
 
+#pragma warning disable CS0649
+
 partial class MAIN {
 
     public sealed class ZRMISS : Mission {

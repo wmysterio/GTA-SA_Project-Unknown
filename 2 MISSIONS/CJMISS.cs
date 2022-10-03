@@ -1,5 +1,7 @@
 ﻿using GTA;
 
+#pragma warning disable CS0649
+
 public partial class MAIN {
 
     public class CJMISS : Mission {

@@ -4,6 +4,7 @@ public partial class MAIN {
 
     public const bool IS_DEBUG = true;
     public const bool DISABLE_CHEATS = false;
+    public const int DEBUG_GAME_LEVEL = 2;
 
     // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ public partial class MAIN {
             wait( 0 );
             Gosub += MAIN_CUTSCENE;
             if( IS_DEBUG ) {
-                CURRENT_GAME_LEVEL.value = 0;
+                CURRENT_GAME_LEVEL.value = DEBUG_GAME_LEVEL;
                 and( CURRENT_GAME_LEVEL == 1, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 800.0 ); } );
                 and( CURRENT_GAME_LEVEL == 2, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 1000.0 ); } );
             } else { 
@@ -60,6 +61,21 @@ public partial class MAIN {
             BLACK_LIST_MISSION_NAME.value = "@BLS@0";
             #endregion
 
+            #region INCORPORATION BASE SETUP
+            INCORP_START_X.value = -2758.0469;
+            INCORP_START_Y.value = 371.9743;
+            INCORP_START_Z.value = 4.3454;
+            INCORP_MISSION_PASSED.value = 0;
+            #endregion
+
+
+            #region CJ & CV BASE SETUP
+            CJ_START_X.value = 2498.9802;
+            CJ_START_Y.value = -1685.6517;
+            CJ_START_Z.value = 13.4478;
+            CJ_TOTAL_MISSION_PASSED.value = 0;
+            #endregion
+
             #region ZERO BASE SETUP
             ZERO_START_X.value = -2245.2568;
             ZERO_START_Y.value = 132.2962;
@@ -76,22 +92,24 @@ public partial class MAIN {
             //SHOP_ASSET_MONEY.create( UNLOCK1.X, UNLOCK1.Y, UNLOCK1.Z, 5000, 5000 );
             #endregion
 
-            #region CJ & CV BASE SETUP
-            CJ_START_X.value = 2498.9802;
-            CJ_START_Y.value = -1685.6517;
-            CJ_START_Z.value = 13.4478;
-            CJ_TOTAL_MISSION_PASSED.value = 0;
-            #endregion
-
 
             // DEBUG START     
-            ZERO_TOTAL_MISSION_PASSED.value = 0;
-            create_thread<ZRSTART>();
+            //ZERO_TOTAL_MISSION_PASSED.value = 0;
+            //create_thread<ZRSTART>();
+            INCORP_START_X.value = 2478.4768;
+            INCORP_START_Y.value = -1667.3813;
+            INCORP_START_Z.value = 13.3303;
+            INCORP_MISSION_PASSED.value = 14;
+            create_thread<INCORST>();
             // DEBUG END
 
 
+
+
+
+
             #region CAR PARK
-            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, 2488.1101, -1683.4895, 12.9456, 89.0883, FBITRUCK, "VITAL", forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
+            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, -2763.6313, 358.3386, 3.8557, 270.0, FBITRUCK, "VITAL", 0, 1, forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
             #endregion
 
             #region PROPERTIES            
@@ -113,15 +131,15 @@ public partial class MAIN {
             | CJMISS  | +16      | +10     |
             | CRASH   | +8       | +0      |
             | REMAX   | +15      | +0      |
-            | INCORP  | +10      | +0      |
+            | INCORP  | +15      | +0      |
             | MAFIA   | +7       | +0      |
             | ZERO    | +5       | +0      |
             | BLIST   | +2       | +0      |
             |------------------------------|
-            | TOTAL   | +63      | +10     |
+            | TOTAL   | +68      | +10     |
             \*----------------------------*/
 
-            set_max_progress( 63 );
+            set_max_progress( 68 );
             set_total_respect_points( 1000 + 10 );
             #endregion
 

@@ -79,10 +79,11 @@ static class Extension {
     public static void destroy_if_exist( this Actor hActor ) {
         and( hActor.is_defined(), delegate { hActor.remove_references().destroy(); } );
     }
-    public static void put_at( this Actor hActor, Float x, Float y, Float z, Float angle = null ) {
+    public static Actor put_at( this Actor hActor, Float x, Float y, Float z, Float angle = null ) {
         hActor.set_position( x, y, z );
         if( !ReferenceEquals( angle, null ) )
             hActor.set_z_angle( angle );
+        return hActor;
     }
     public static void extinguish_current_car_if_exist<T>( this Actor hActor, Vehicle<T> hVehicleTemp ) where T : Vehicle<T> {
         and( hActor.is_in_any_vehicle(), delegate {

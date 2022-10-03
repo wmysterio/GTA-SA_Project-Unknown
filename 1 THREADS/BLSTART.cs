@@ -1,5 +1,7 @@
 ﻿using GTA;
 
+#pragma warning disable CS0649
+
 public partial class MAIN {
 
     static Int BLACK_LIST_MISSION_PASSED, BLACK_LIST_MISSION_STAGE, IS_BLACK_LIST_TUTORIAL_SHOWED;
