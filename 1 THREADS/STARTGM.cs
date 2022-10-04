@@ -109,7 +109,7 @@ public partial class MAIN {
 
 
             #region CAR PARK
-            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, -2763.6313, 358.3386, 3.8557, 270.0, FBITRUCK, "VITAL", 0, 1, forceSpawn_bool: 1 ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
+            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, -2760.6226, 356.6801, 3.8356, 178.5966, FBITRUCK, "VITAL", 0, 1, forceSpawn_bool: true ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
             #endregion
 
             #region PROPERTIES            
