@@ -85,6 +85,9 @@ static class Extension {
             hActor.set_z_angle( angle );
         return hActor;
     }
+    public static Actor give_weapon_and_select_it( this Actor hActor, Int weaponNumber, Int ammo ) { 
+        return hActor.give_weapon( weaponNumber, ammo ).set_armed_weapon( weaponNumber );
+    }
     public static void extinguish_current_car_if_exist<T>( this Actor hActor, Vehicle<T> hVehicleTemp ) where T : Vehicle<T> {
         and( hActor.is_in_any_vehicle(), delegate {
             hActor.get_current_vehicle( hVehicleTemp );

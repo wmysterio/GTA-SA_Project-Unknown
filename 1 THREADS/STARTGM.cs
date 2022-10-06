@@ -5,12 +5,14 @@ public partial class MAIN {
     public const bool IS_DEBUG = true;
     public const bool DISABLE_CHEATS = false;
     public const int DEBUG_GAME_LEVEL = 2;
+    public const double TEST_SOUND_VOLUME = 1.0; // 1.0
 
     // ---------------------------------------------------------------------------------------------------------------------------
 
     static Timer MISSION_GLOBAL_TIMER_1;
     static StatusText MISSION_GLOBAL_STATUS_TEXT_1, MISSION_GLOBAL_STATUS_TEXT_2, MISSION_GLOBAL_STATUS_TEXT_3;
     static sString CURRENT_MISSION_NAME;
+    static Float SELECTED_VOLUME_IN_MISSION;
 
     // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -21,6 +23,7 @@ public partial class MAIN {
         // ---------------------------------------------------------------------------------------------------------------------------
 
         public override void START( LabelJump label ) {
+            SELECTED_VOLUME_IN_MISSION.value = TEST_SOUND_VOLUME;
             create_thread<SAVEGM>();
             create_thread<BUY_PRO>();
             create_thread<AUDIOBG>();
@@ -29,14 +32,15 @@ public partial class MAIN {
             Gosub += BASE_GAME_SETUP;
             create_thread<CJSTART>();
             wait( 0 );
-            Gosub += MAIN_CUTSCENE;
             if( IS_DEBUG ) {
+                makeGameToPlay();
                 CURRENT_GAME_LEVEL.value = DEBUG_GAME_LEVEL;
                 and( CURRENT_GAME_LEVEL == 1, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 800.0 ); } );
                 and( CURRENT_GAME_LEVEL == 2, delegate { set_float_stat( StatsID_Float.MAX_HEALTH, 1000.0 ); } );
-            } else { 
-              create_thread<SELECTG>();
-              wait( IS_CURRENT_GAME_SELECTED == false );
+            } else {
+                Gosub += MAIN_CUTSCENE;
+                create_thread<SELECTG>();
+                wait( IS_CURRENT_GAME_SELECTED == false );
             }
             __disable_player_controll_in_cutscene( false );
             end_thread();
@@ -62,11 +66,13 @@ public partial class MAIN {
             #endregion
 
             #region INCORPORATION BASE SETUP
-            INCORP_START_X.value = -2758.0469;
-            INCORP_START_Y.value = 371.9743;
-            INCORP_START_Z.value = 4.3454;
+            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, -2646.8413, 410.0653, 4.3961, 90.0, FBITRUCK, "VITAL", 0, 1, forceSpawn_bool: true ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
+            INCORP_START_X.value = -2654.4265;
+            INCORP_START_Y.value = 393.8699;
+            INCORP_START_Z.value = 4.3359;
             INCORP_MISSION_PASSED.value = 0;
             #endregion
+
 
 
             #region CJ & CV BASE SETUP
@@ -102,15 +108,6 @@ public partial class MAIN {
             INCORP_MISSION_PASSED.value = 14;
             create_thread<INCORST>();
             // DEBUG END
-
-
-
-
-
-
-            #region CAR PARK
-            CAR_PARK.init_with_number_plate( CJ_PROTOTYPE_CAR, -2760.6226, 356.6801, 3.8356, 178.5966, FBITRUCK, "VITAL", 0, 1, forceSpawn_bool: true ).set_chance_to_generate( CJ_PROTOTYPE_CAR, 0 ).set_to_player_owned( CJ_PROTOTYPE_CAR, true );
-            #endregion
 
             #region PROPERTIES            
             SHOP_IN_COUNTRISIDE_MARKER.create_short_range( RadarIconID.PROPERTY_RED, UNLOCK1.X, UNLOCK1.Y, UNLOCK1.Z ).set_radar_mode( 2 );
@@ -167,6 +164,12 @@ public partial class MAIN {
 
             // destroy all entities
 
+            makeGameToPlay();
+        }
+
+        // ---------------------------------------------------------------------------------------------------------------------------
+
+        private void makeGameToPlay() {
             clear_area( false, 2488.562, -1666.865, 12.8757, 300.0 );
             __renderer_at( 2488.562, -1666.865, 12.8757 );
             a.set_position( 2488.562, -1666.865, 12.8757 );

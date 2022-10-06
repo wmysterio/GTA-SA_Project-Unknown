@@ -6,13 +6,17 @@ partial class MAIN {
 
     public sealed class ICMISS : Mission {
 
-        const double RESTART_POSITION_X = -2757.6736,
-                     RESTART_POSITION_Y = 362.6336,
-                     RESTART_POSITION_Z = 3.3727,
-                     RESTART_POSITION_A = 270.0;
+        const double RESTART_POSITION_X = -2654.5879,
+                     RESTART_POSITION_Y = 399.3082,
+                     RESTART_POSITION_Z = 3.3359,
+                     RESTART_POSITION_A = 360.0;
 
-        const ushort CUTSCENE_ENTITY_ARRAY_SIZE = 10;
-        const ushort TOTAL_WEAPONS_GROUPS = 14;
+        const ushort MAX_INFECTION_LEVEL = 100,
+                     INFECTION_STEP = 2,
+                     INFECTION_DELAY = 1000,
+                     TOTAL_SUBMISSION = 14,
+                     CUTSCENE_ENTITY_ARRAY_SIZE = 10,
+                     TOTAL_WEAPONS_GROUPS = 14;
 
         // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -25,10 +29,11 @@ partial class MAIN {
 
         static Int INCORP_MOVIE_FLAG;
 
-        Int reward, index, index2, enemyDefaultHealth, isPlayerWeaponSaved, temp, enabledWeaponNumber, playTune;
+        Int reward, index, index2, counter, enemyDefaultHealth, isPlayerWeaponSaved, temp, enabledWeaponNumber, playTune;
         Car player_car;
         DecisionMaker friendDecisionMaker;
         Car tempCar;
+        Float tempX1, tempY1, tempZ1, tempX2, tempY2, tempZ2;
 
         sString failedMessage;
 
@@ -38,7 +43,7 @@ partial class MAIN {
 
         Array<Float> tempX = CUTSCENE_ENTITY_ARRAY_SIZE, tempY = CUTSCENE_ENTITY_ARRAY_SIZE, tempZ = CUTSCENE_ENTITY_ARRAY_SIZE, tempA = CUTSCENE_ENTITY_ARRAY_SIZE;
 
-        // 34 + 10*1 + 1*2 + 8*10 + 14*3 = 168
+        // 34 + 17*1 + 1*2 + 8*10 + 14*3 = 173
 
         Array<Actor> cutcsene_actors = local_array( 0, CUTSCENE_ENTITY_ARRAY_SIZE );
         Array<Car> cutcsene_cars = local_array( 10, CUTSCENE_ENTITY_ARRAY_SIZE );
@@ -226,9 +231,15 @@ partial class MAIN {
 
             Int[] used_models = new Int[] { FBITRUCK, 981, AK47, CHROMEGUN, SHOTGSPA, COLT45, MP5LNG, WMYCD1, BMYCON, SWMOTR5, SBMOCD };
 
+            chdir( @"Sound\ICMISS" );
+            AUDIO_BG.load( 14, true );
+            wait( AUDIO_BG.is_ready );
             playTune.value = true;
             reward.value = 5000;
+            enemyDefaultHealth.value = 180;
             MISSION_GLOBAL_STATUS_TEXT_1.value = 0;
+            MISSION_GLOBAL_TIMER_1.value = 240000; // 1000ms * 60s * 4m
+            MISSION_GLOBAL_STATUS_TEXT_2.value = MAX_INFECTION_LEVEL;
             switch_roads_off( -361.7219, 962.9586, -10.0, 177.2781, 1260.9586, 40.0 );
             set_weather( WeatherID.SUNNY_VEGAS );
             set_current_time( 10, 0 );
@@ -242,15 +253,16 @@ partial class MAIN {
                       .set_z_angle( 299.4474 )
                       .set_colors( 0, 1 )
                       .set_immunities( true )
-                      //.set_door_status( DoorStatus.UNLOCKED ) // uncomment for debug
                       .set_health( 2500 )
                       .lock_position( true );
-            //                                      0       1           2          3         4        5           6         7
-            Float[] tmpCSArrayX = new Float[] { -31.9119, -25.9817, -140.7807, -130.9469, -46.103, -142.2492, -46.9359, -66.828 };
-            Float[] tmpCSArrayY = new Float[] { 1185.714, 1148.4099, 1101.364, 1174.5115, 1091.8779, 1135.4916, 1124.705, 1070.6288 };
-            Float[] tmpCSArrayZ = new Float[] { 18.3594, 18.5914, 18.5937, 18.7422, 18.7422, 18.75, 18.9137, 18.5937 };
-            Float[] tmpCSArrayA = new Float[] { 141.0952, 87.5147, 271.733, 222.5627, 36.4409, 296.51, 77.1043, 2.8437 };
+
+            //                                      0       1           2          3         4        5           6         7       8         9
+            Float[] tmpCSArrayX = new Float[] { -31.9119, -25.9817, -140.7807, -130.9469, -46.103, -142.2492, -46.9359, -66.828, -46.7492, -116.9518 };
+            Float[] tmpCSArrayY = new Float[] { 1185.714, 1148.4099, 1101.364, 1174.5115, 1091.8779, 1135.4916, 1124.705, 1070.6288, 1192.0177, 1133.712 };
+            Float[] tmpCSArrayZ = new Float[] { 18.3594, 18.5914, 18.5937, 18.7422, 18.7422, 18.75, 18.9137, 18.5937, 18.3594, 18.7422 };
+            Float[] tmpCSArrayA = new Float[] { 141.0952, 87.5147, 271.733, 222.5627, 36.4409, 296.51, 77.1043, 2.8437, 105.2085, 1.5903 };
             ushort TOTAL_ENEMIES = ( ushort ) ( tmpCSArrayX.Length - 1 );
+            ushort TOTAL_FRIENDS = 3;
             for( ushort i = 0; i < tmpCSArrayX.Length; i++ ) {
                 tempX[ i ].value = tmpCSArrayX[ i ];
                 tempY[ i ].value = tmpCSArrayY[ i ];
@@ -258,13 +270,13 @@ partial class MAIN {
                 tempA[ i ].value = tmpCSArrayA[ i ];
             }
 
-            cutcsene_objects[ 0 ].create( 981, -56.38, 1148.17, 18.5 ).set_z_angle( 90.0 ); //.set_z_angle( 270.0 );
-            cutcsene_objects[ 1 ].create( 981, -70.05, 1188.30, 18.5 ).set_z_angle( 180.0 ); //.set_z_angle( 0.0 );
-            cutcsene_objects[ 2 ].create( 981, -115.6, 1188.30, 18.5 ).set_z_angle( 180.0 ); //.set_z_angle( 0.0 );
-            cutcsene_objects[ 3 ].create( 981, -125.3, 1148.23, 18.5 ).set_z_angle( 270.0 ); //.set_z_angle( 90.0 );
-            cutcsene_objects[ 4 ].create( 981, -125.3, 1098.22, 18.5 ).set_z_angle( 270.0 ); //.set_z_angle( 90.0 );
-            cutcsene_objects[ 5 ].create( 981, -70.05, 1088.50, 18.5 ).set_z_angle( 0.0 );   //.set_z_angle( 180.0 );
-            cutcsene_objects[ 6 ].create( 981, -56.38, 1105.37, 18.5 ).set_z_angle( 90.0 );  //.set_z_angle( 270.0 );
+            cutcsene_objects[ 0 ].create( 981, -56.38, 1148.17, 18.5 ).set_z_angle( 90.0 );
+            cutcsene_objects[ 1 ].create( 981, -70.05, 1188.30, 18.5 ).set_z_angle( 180.0 );
+            cutcsene_objects[ 2 ].create( 981, -115.6, 1188.30, 18.5 ).set_z_angle( 180.0 );
+            cutcsene_objects[ 3 ].create( 981, -125.3, 1148.23, 18.5 ).set_z_angle( 270.0 );
+            cutcsene_objects[ 4 ].create( 981, -125.3, 1098.22, 18.5 ).set_z_angle( 270.0 );
+            cutcsene_objects[ 5 ].create( 981, -70.05, 1088.50, 18.5 ).set_z_angle( 0.0 );
+            cutcsene_objects[ 6 ].create( 981, -56.38, 1105.37, 18.5 ).set_z_angle( 90.0 );
 
             friendActors[ 0 ].create( ActorType.MISSION1, WMYCD1, -100.6243, 1098.1888, 18.5937 ).set_z_angle( 90.0 );
             friendActors[ 1 ].create( ActorType.MISSION1, BMYCON, -108.9, 1151.5237, 18.6783 ).set_z_angle( 40.4 );
@@ -276,34 +288,32 @@ partial class MAIN {
                                .clear_event_response( 48 );
 
             and( CURRENT_GAME_LEVEL == 0, delegate {
-                friendActors[ 0 ].give_weapon( WeaponNumber.MP5, 800 ).set_armed_weapon( WeaponNumber.SPAS12 );
-                friendActors[ 1 ].give_weapon( WeaponNumber.AK47, 800 ).set_armed_weapon( WeaponNumber.AK47 );
-                friendActors[ 2 ].give_weapon( WeaponNumber.PISTOL, 800 ).set_armed_weapon( WeaponNumber.MP5 );
-                friendActors[ 3 ].give_weapon( WeaponNumber.SPAS12, 800 ).set_armed_weapon( WeaponNumber.PISTOL );
-                enemyDefaultHealth.value = 350;
+                friendActors[ 0 ].give_weapon_and_select_it( WeaponNumber.MP5, 600 );
+                friendActors[ 1 ].give_weapon_and_select_it( WeaponNumber.AK47, 700 );
+                friendActors[ 2 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 500 );
+                friendActors[ 3 ].give_weapon_and_select_it( WeaponNumber.SPAS12, 400 );
                 MISSION_GLOBAL_TIMER_1.value = 180000; // 1000ms * 60s * 3m
             } );
+			
             and( CURRENT_GAME_LEVEL == 1, delegate {
-                friendActors[ 0 ].give_weapon( WeaponNumber.PISTOL, 400 ).set_armed_weapon( WeaponNumber.MP5 );
-                friendActors[ 1 ].give_weapon( WeaponNumber.MP5, 400 ).set_armed_weapon( WeaponNumber.MP5 );
-                friendActors[ 2 ].give_weapon( WeaponNumber.PISTOL, 500 ).set_armed_weapon( WeaponNumber.PISTOL );
-                friendActors[ 3 ].give_weapon( WeaponNumber.MP5, 500 ).set_armed_weapon( WeaponNumber.PISTOL );
-                enemyDefaultHealth.value = 400;
-                MISSION_GLOBAL_TIMER_1.value = 180000; // 1000ms * 60s * 3m
+                friendActors[ 0 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 400 );
+                friendActors[ 1 ].give_weapon_and_select_it( WeaponNumber.MP5, 500 );
+                friendActors[ 2 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 400 );
+                friendActors[ 3 ].give_weapon_and_select_it( WeaponNumber.MP5, 500 );
             } );
+			
             and( CURRENT_GAME_LEVEL == 2, delegate {
-                friendActors[ 0 ].give_weapon( WeaponNumber.MP5, 300 ).set_armed_weapon( WeaponNumber.MP5 );
-                friendActors[ 1 ].give_weapon( WeaponNumber.PISTOL, 400 ).set_armed_weapon( WeaponNumber.PISTOL );
-                friendActors[ 2 ].give_weapon( WeaponNumber.PISTOL, 400 ).set_armed_weapon( WeaponNumber.PISTOL );
-                friendActors[ 3 ].give_weapon( WeaponNumber.PISTOL, 400 ).set_armed_weapon( WeaponNumber.PISTOL );
-                enemyDefaultHealth.value = 450;
-                MISSION_GLOBAL_TIMER_1.value = 240000; // 1000ms * 60s * 4m
+                friendActors[ 0 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 300 );
+                friendActors[ 1 ].give_weapon_and_select_it( WeaponNumber.MP5, 400 );
+                friendActors[ 2 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 300 );
+                friendActors[ 3 ].give_weapon_and_select_it( WeaponNumber.PISTOL, 300 );
+                enemyDefaultHealth.value = 225;
                 reward.value = 3500;
             } );
 
             and( INCORP_MOVIE_FLAG == false, delegate {
                 INCORP_MOVIE_FLAG.value = true;
-                to( index, 0, 3, h => { friendActors[ index ].set_immunities( true ); } );
+                to( index, 0, TOTAL_FRIENDS, h => { friendActors[ index ].set_immunities( true ); } );
                 CAMERA.set_position( -49.3827, 1098.3329, 36.1666 ).set_point_at( -82.8439, 1155.6731, 22.7422, 2 );
                 wait( 2000 );
                 __toggle_cinematic( true );
@@ -312,49 +322,67 @@ partial class MAIN {
                     wait( 1500 );
 
                     show_text_highpriority( "@IC@000", 8000, 1 );
-                    wait( 8000 );
+                    wait( 9000 );
 
                     show_text_highpriority( "@IC@001", 8000, 1 );
                     wait( 8000 );
 
+                    and( CURRENT_GAME_LEVEL > 1, delegate {
+                        show_text_highpriority( "@IC@002", 8000, 1 );
+                        wait( 6000 );
+                    } );
+
                 };
                 __fade( false, true );
                 __toggle_cinematic( false );
-                to( index, 0, 3, h => { friendActors[ index ].set_immunities( false ); } );
+                to( index, 0, TOTAL_FRIENDS, h => { friendActors[ index ].set_immunities( false ); } );
             }, delegate { wait( 500 ); } );
 
-            to( index, 0, 3, h => {
-                and( CURRENT_GAME_LEVEL == 0, delegate {
-                    friendActors[ index ].set_only_damaged_by_player( true );
-                }, delegate {
-                    friendActors[ index ].set_drops_weapons_when_dead( false );
-                } );
+            to( index, 0, TOTAL_FRIENDS, h => {
                 friendActors[ index ].set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
                                      .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 )
-                                     .set_acquaintance( AcquaintanceType.HATE, ActorType.MISSION2 )
-                                     .set_max_health( enemyDefaultHealth ).set_health( enemyDefaultHealth )
-                                     .set_suffers_critical_hits( false )
+                                     .set_max_health( 180 ).set_health( 180 )
                                      .set_decision_maker( friendDecisionMaker )
                                      .enable_validate_position( true )
+                                     .set_only_damaged_by_player( true )
+                                     .set_drops_weapons_when_dead( false )
                                      .set_money( 0 )
                                      .set_weapon_attack_rate( 70 )
                                      .set_weapon_accuracy( 50 );
+                and( CURRENT_GAME_LEVEL == 0, delegate {
+                    friendActors[ index ].set_suffers_critical_hits( false );
+                } );
                 friendMarkers[ index ].create_above_actor( friendActors[ index ] ).set_radar_mode( 1 ).set_type( true );
             } );
+			
             enabledWeaponNumber.value = 25;
-            friendMarkers[ 4 ].create_above_vehicle( player_car ).set_color( MarkerColor.GREEN ).set_size( 2 ).set_type( true );
+            friendMarkers[ 9 ].create_above_vehicle( player_car ).set_color( MarkerColor.GREEN ).set_size( 2 ).set_type( true );
             a.give_weapon( enabledWeaponNumber, 300 ).set_armed_weapon( enabledWeaponNumber );
             destroy_model( used_models );
             player_car.set_immunities( false, false, true, true, false );
-            __camera_default();
             wait( 1500 );
             set_radar_zoom( 4 );
-            __fade( true, true );
+            create_explosion_no_sound( ExplosionType.MEDIUM_4, -91.3082, 1149.4766, 19.7422 );
+            create_explosion_no_sound( ExplosionType.MEDIUM_4, -91.3768, 1140.9576, 19.7422 );
+            create_explosion_no_sound( ExplosionType.MEDIUM_4, -51.8661, 1161.9532, 19.6575 );
+            create_explosion_no_sound( ExplosionType.MEDIUM_4, -47.3112, 1162.7938, 19.6094 );
+            clear_area( true, -90.5624, 1146.3016, 19.75, 4.0 );
+            extinguish_fire_at_point( -90.5624, 1146.3016, 19.75, 10.0 );
+            clear_area( true, -50.394, 1162.7944, 19.6395, 4.0 );
+            extinguish_fire_at_point( -50.394, 1162.7944, 19.6395, 10.0 );
+            __camera_default();
             p.ignored_by_cops( true );
             set_sensitivity_to_crime( 0.0 );
+            __fade( true, true );
+            AUDIO_BG.set_volume( SELECTED_VOLUME_IN_MISSION ).play();
             __disable_player_controll_in_cutscene( false );
             MISSION_GLOBAL_TIMER_1.start( TimerType.DOWN, "BB_19" );
             MISSION_GLOBAL_STATUS_TEXT_1.create( StatusTextType.NUMBER, "@INC@21" );
+            and( CURRENT_GAME_LEVEL > 1, delegate {
+                MISSION_GLOBAL_STATUS_TEXT_2.create( StatusTextType.LINE, 2, "@INC@22" );
+                MISSION_GLOBAL_STATUS_TEXT_2.value = 0;
+                LocalTimer1.value = 0;
+            } );
 
             Cycle += delegate {
                 wait( 0 );
@@ -376,7 +404,7 @@ partial class MAIN {
                     ___jump_failed( "@INC@17" );
                 } );
 
-                to( index, 0, 3, h => {
+                to( index, 0, TOTAL_FRIENDS, h => {
                     and( friendActors[ index ].is_defined(), delegate {
                         and( friendActors[ index ].is_dead(), delegate {
                             friendMarkers[ index ].disable_if_exist();
@@ -388,10 +416,10 @@ partial class MAIN {
                                 to( index2, 0, TOTAL_ENEMIES, h2 => {
                                     and( enemyActors[ index2 ].is_defined(), delegate {
                                         and( !enemyActors[ index2 ].is_dead(), delegate {
-                                            friendActors[ index ].get_position( tempX[ 9 ], tempY[ 9 ], tempZ[ 9 ] );
-                                            enemyActors[ index2 ].get_position( tempX[ 8 ], tempY[ 8 ], tempZ[ 8 ] );
-                                            get_distance_2d( tempX[ 9 ], tempY[ 9 ], tempX[ 8 ], tempY[ 8 ], tempX[ 9 ] );
-                                            and( 40.0 > tempX[ 9 ], delegate {
+                                            friendActors[ index ].get_position( tempX1, tempY1, tempZ1 );
+                                            enemyActors[ index2 ].get_position( tempX2, tempY2, tempZ2 );
+                                            get_distance_2d( tempX1, tempY1, tempX2, tempY2, tempY2 );
+                                            and( 25.0 > tempY2, delegate {
                                                 friendActors[ index ].task.shoot_at_actor( enemyActors[ index2 ], 3000 );
                                             } );
                                         } );
@@ -402,8 +430,17 @@ partial class MAIN {
                     } );
                 } );
 
+                counter.value = 0;
                 to( index, 0, TOTAL_ENEMIES, h => {
                     and( enemyActors[ index ].is_defined(), delegate {
+                        enemyActors[ index ].set_bleeding( true );
+                        and( CURRENT_GAME_LEVEL > 1, delegate {
+                            or( enemyActors[ index ].is_colliding_with_actor( a ),
+                                enemyActors[ index ].is_near_actor_3d( false, a, 3.0, 3.0, 3.0 ),
+                            delegate {
+                                counter += INFECTION_STEP;
+                            } );
+                        } );
                         and( enemyActors[ index ].is_dead(), delegate {
                             and( enemyMarkers[ index ].is_enabled(), delegate {
                                 MISSION_GLOBAL_STATUS_TEXT_1 += 1;
@@ -411,34 +448,43 @@ partial class MAIN {
                             } );
                             enemyMarkers[ index ].disable_if_exist();
                         }, delegate {
-                            enemyActors[ index ].set_bleeding( true ).get_task_status( 1997, temp );
+                            enemyActors[ index ].get_task_status( 1997, temp );
                             and( temp == 7, delegate {
                                 enemyActors[ index ].clear_tasks().task.walk_to_point( -83.7493, 1159.569, 19.1728, 0.0, 2.0 );
                             } );
-                            and( enemyActors[ index ].is_near_vehicle_3d( false, player_car, 20.0, 20.0, 4.0 ), delegate {
+                            and( enemyActors[ index ].is_near_vehicle_3d( false, player_car, 19.0, 19.0, 19.0 ), delegate {
                                 and( !is_text_priority_displayed(), delegate {
                                     show_text_highpriority( "@INC@18", 2000, 1 );
                                 } );
                                 or( enemyActors[ index ].is_colliding_with_vehicle( player_car ),
-                                    enemyActors[ index ].is_near_vehicle_3d( false, player_car, 2.5, 2.5, 4.0 ),
+                                    enemyActors[ index ].is_near_vehicle_3d( false, player_car, 2.25, 2.25, 4.0 ),
                                 delegate {
                                     ___jump_failed( "@INC@19" );
                                 } );
                             } );
                         } );
                     }, delegate {
-                        and( !is_sphere_onscreen( tempX[ index ], tempY[ index ], tempZ[ index ], 4.0 ), delegate {
+                        and( !is_sphere_onscreen( tempX[ index ], tempY[ index ], tempZ[ index ], 2.5 ), delegate {
                             enemyActors[ index ].create_random( tempX[ index ], tempY[ index ], tempZ[ index ] )
                                                 .set_z_angle( tempA[ index ] )
                                                 .set_walk_style( WalkStyle.FATMAN )
                                                 .set_acquaintance( AcquaintanceType.RESPECT, ActorType.MISSION1 )
                                                 .set_acquaintance( AcquaintanceType.RESPECT, ActorType.PLAYER )
                                                 .set_suffers_critical_hits( false )
-                                                .set_decision_maker( friendDecisionMaker ) // enemyDecisionMaker
+                                                .set_decision_maker( friendDecisionMaker )
+                                                .set_max_health( enemyDefaultHealth ).set_health( enemyDefaultHealth )
                                                 .set_money( 0 );
                             enemyMarkers[ index ].create_above_actor( enemyActors[ index ] ).set_size( 1 );
                         } );
                     } );
+                } );
+
+                and( CURRENT_GAME_LEVEL > 1, counter > 0, LocalTimer1 > INFECTION_DELAY, delegate {
+                    MISSION_GLOBAL_STATUS_TEXT_2 += counter;
+                    and( MISSION_GLOBAL_STATUS_TEXT_2 >= MAX_INFECTION_LEVEL, delegate {
+                        ___jump_failed( "@INC@23" );
+                    } );
+                    LocalTimer1.value = 0;
                 } );
 
                 and( 1 > MISSION_GLOBAL_TIMER_1, delegate {
@@ -447,7 +493,7 @@ partial class MAIN {
                     reward += temp;
                     and( 1 > CURRENT_GAME_LEVEL, delegate {
                         temp.value = 0;
-                        to( index, 0, 3, h => {
+                        to( index, 0, TOTAL_FRIENDS, h => {
                             and( friendActors[ index ].is_defined(), delegate {
                                 and( !friendActors[ index ].is_dead(), delegate {
                                     temp += 250;
@@ -534,10 +580,10 @@ partial class MAIN {
             INCORP_MISSION_PASSED += 1;
             INCORP_MOVIE_FLAG.value = false;
             set_made_progress();
-            and( 14 > INCORP_MISSION_PASSED, delegate {
+            and( TOTAL_SUBMISSION > INCORP_MISSION_PASSED, delegate {
                 create_thread<INCORST>();
             } );
-            and( INCORP_MISSION_PASSED >= 14, delegate {
+            and( INCORP_MISSION_PASSED >= TOTAL_SUBMISSION, delegate {
                 CAR_PARK.set_chance_to_generate( CJ_PROTOTYPE_CAR, 101 );
                 show_text_lowpriority( "@INC@20", 12000, 1 );
             } );
@@ -587,7 +633,7 @@ partial class MAIN {
             friendDecisionMaker.release();
             //enemyDecisionMaker.release();
             MISSION_GLOBAL_STATUS_TEXT_1.remove();
-            //MISSION_GLOBAL_STATUS_TEXT_2.remove();
+            MISSION_GLOBAL_STATUS_TEXT_2.remove();
             //MISSION_GLOBAL_STATUS_TEXT_3.remove();
             MISSION_GLOBAL_TIMER_1.stop();
             //helpWeapon.destroy_if_exist();
